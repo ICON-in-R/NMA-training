@@ -1,0 +1,140 @@
+---
+title: "Software instructions"
+format: pdf
+editor: visual
+---
+
+Since both `R` and `BUGS` (or `JAGS`, which is an alternative Bayesian software) are free, you can install them on your own laptop/desktop, if you want.
+
+The following gives you a quick guide on how you install the software that is required for the analyses that we will go through in the practicals:
+
+- `OpenBUGS`    
+- `JAGS` (optional)     
+- `R` and specifically the packages `R2OpenBUGS` and `BCEA`. Other optional packages (e.g. `reshape`, `dplyr`, `INLA` and `R2jags`) may need to be installed    
+
+- The `R` front-end `Rstudio` (optional)     
+
+::: {.callout-tip}
+Notice that you don't have to install both `OpenBUGS` **and** `JAGS` --- the former is sufficient for the purposes of this course.
+:::
+
+
+### Specific installation instructions (`R`, `BUGS` and `JAGS`)
+
+::: {.callout-note icon="false" collapse="true"}
+## {{< fa screwdriver-wrench >}} &nbsp; MS Windows users
+If you are a `Windows` user, your setting should be fairly easy. 
+
+1. Download the file `OpenBUGS323setup.exe` from the webpage [https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/2014/07/OpenBUGS323setup.zip](https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/2014/07/OpenBUGS323setup.zip), extract the `exe` file from the downloaded `zip` file and run it by double-clicking on it.    
+2. Download `R` from [http://cran.r-project.org/bin/windows/](http://cran.r-project.org/bin/windows/) (click on the link "install R for the first time"").    
+3. Once you have installed `R`, open it and type in the terminal the command `install.packages("R2OpenBUGS")`. This command will download the package `R2OpenBUGS`, which is needed to interface `OpenBUGS` with `R`. Follow the on-screen instructions (you will be asked to select a "mirror from which to obtain the file).    
+4. Make sure that the download has worked by typing in the terminal the command `library(R2OpenBUGS)`. If you do not see any error message, then the package has been successfully installed.     
+5. Install the `BCEA` package that we will use throughout the practicals, by typing `install.packages("BCEA")`.     
+6. Repeat the installation process for the other packages that are used in the practicals (e.g. `reshape` and `dplyr`). Since this is optional, you can leave this final step to when it is actually needed.
+
+If you like, you can also install `JAGS`, following these steps. 
+
+1. Go to [http://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/](http://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/) and click on the latest available executable file (currently, [`JAGS-4.3.1.exe`](https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe/download)). Running this file will install `JAGS` on your machine.     
+2. If you do so, then in the `R` terminal type the command `install.packages("R2jags")`. This will allow you to use `JAGS` (instead of `OpenBUGS`) when doing the practicals --- notice that to make a package available you will have to load it to the workspace by using the `library(name_package)` command.
+:::
+
+::: {.callout-note icon="false" collapse="true"}
+## {{< fa screwdriver-wrench >}} &nbsp; Linux or Mac OS users 
+
+### Installing `R` and `BCEA`
+`Linux` or `Mac OS` users should follow slightly different approaches. The installation of `R` is pretty much the same as for `MS WIndows` users. From the webpage [http://cran.r-project.org/](http://cran.r-project.org/) select your operating system (`Linux` or `Mac OS`) and then your version (eg `debian`, `redhat`, `suse` or `ubuntu`, for `Linux`). Follow the instructions to install the software. Once this is done, open `R` and install the package `BCEA` by typing at the terminal the command `install.packages("BCEA")`. You can use similar commands to install other packages.
+
+### Installing `OpenBUGS` and `JAGS` in `Linux`
+While both `OpenBUGS` and `JAGS` run natively in `Linux` (see below for details on how to install them directly), the graphical interface is not available for `OpenBUGS`. 
+
+<!--
+Because we will use it for at least the first few practicals, it is advisable to install `wine`, a "compatibility layer"" that allows to run `Windows` applications from `Linux` or `Mac`. Instructions are available at [https://www.winehq.org/download/](https://www.winehq.org/download/). 
+
+When you have installed `wine`, you can also install `OpenBUGS`, which you will be then able to access using the graphical interface, by following these steps. 
+1. Go to the webpage [https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/2014/07/OpenBUGS323setup.zip](https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/2014/07/OpenBUGS323setup.zip), extract from the `.zip` file the windows executable file `OpenBUGS323setup.exe` and place it in your default directory for `wine` programs (usually `~/.wine/drive_c`).     
+2. Run the `OpenBUGS` installer
+    - Open a terminal window;
+    - Move to the directory where you placed the `OpenBUGS` executable you downloaded in step 1, something like: `cd ~/.wine/drive_c`
+    - Type: `wine OpenBUGS323setup.exe`;
+    - Wait for a while and then follow the prompts to install --- by default, the installation folder is `~/.wine/drive_c/Program Files/OpenBUGS323`
+    - NB: There may be an error at the end, this is OK. Close down the Terminal Window
+3. Test `OpenBUGS` by opening a new terminal window typing the command: `wine ~/.wine/drive_c/Program Files/OpenBUGS323/OpenBUGS.exe`     
+4. Download the `R2OpenBUGS` package from [http://www.openbugs.info/w/UserContributedCode](http://www.openbugs.info/w/UserContributedCode)    
+5. Open `R` and install `R2OpneBUGS` by typing the command `install.packages("R2OpenBUGS")`
+-->
+
+You can install the `Linux` version of `OpenBUGS` (available from [here](https://www.mrc-bsu.cam.ac.uk/wp-content/uploads/2018/04/OpenBUGS-3.2.3.tar.gz)) by following the instructions given at [https://www.mrc-bsu.cam.ac.uk/software/bugs/openbugs/building-and-packaging-openbugs/openbugs-linux-installation/](https://www.mrc-bsu.cam.ac.uk/software/bugs/openbugs/building-and-packaging-openbugs/openbugs-linux-installation/). This will work just as well, but you won't be able to access the graphical interface (which, again, is not really a problem, in our case...). 
+
+::: {.callout-warning}
+**NB**: Under `Linux`, you may need to also install additional packages to support the `OpenBUGS` installation. For instance, under `Debian` or `Ubuntu`, you may need to also run in your terminal
+```
+sudo apt-get install g++-multilib
+```
+to install the library `g++multilib`.
+:::
+
+In addition, you can also install `JAGS`. Depending on your specific distribution of `Linux`, you may use a very simple command or need to install from source. If you are under `Ubuntu` or `Debian`, you can simply type in your terminal
+```
+sudo apt install jags
+```
+to install `JAGS`.
+
+Alternatively, the source installation (which would work for *all* `Linux` distributions) is done following these steps.
+
+1. Go to [http://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/](http://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/) and download the latest `tar.gz` file (currently, [`JAGS-4.3.1.tar.gz`](https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Source/JAGS-4.3.1.tar.gz/download))    
+2. Open a terminal window and extract the content of the archive file by typing the command `tar xzvf JAGS-4.3.1.tar.gz`     
+3. Move to the directory (which has just been created) using the command `cd JAGS-4.3.1`     
+4. Run the configuration by typing `sudo ./configure --prefix=/us && sudo make && sudo make install`      
+5. Clean up the unnecessary files and folder by typing `cd .. && sudo rm -fr JAGS-4.3.1 && rm JAGS-4.3.1.tar.gz`
+
+Either way, if you decide to work with `JAGS`, then open `R` and also install the package `R2JAGS` (using the same command as for the installation of the package `R2OpneBUGS`). Notice that you don't have to install both `OpenBUGS` and `JAGS` --- the former is sufficient for the purposes of this course.
+
+### Installing `OpenBUGS` and `JAGS` in `Mac OS`
+While similar in spirit, installation under `Mac OS` is slightly more complex, because the process requires some extra software that is not automatically installed. Basically, you need to follow this procedure, as detailed at the website [http://www.jkarreth.net/bayes-icpsr.html#bugsmac](http://www.jkarreth.net/bayes-icpsr.html#bugsmac). Basically, you first install a `Windows` "a compatibility layer" (`wine`), which allows you to run `Windows` applications on other operating systems. This will also allow you to use the `OpenBUGS` graphical interface (although, again, we will not, in the practicals!).
+
+1. Update your `Mac OS` to the newest version.     
+2. Install `Xcode` through the [App Store](https://apps.apple.com/us/app/xcode/id497799835?mt=12).      
+3. Check if you have `X11` installed (this is a a windowing system, common on `Unix`-like operating systems, which, believe it or not, `MaxOs` is!): hit Command-Space, type `X11`, and see if the program shows up. If not, install it from [here](http://xquartz.macosforge.org/).     
+4. Download a the stable pre-compiled version of [`wine`](https://dl.winehq.org/wine-builds/macosx/download.html). Instructions to install `wine` on `Mac OS` are available [here](https://www.embird.net/sw/embird/tutorial/wine/wine.htm).  
+5. Download `OpenBUGS323setup.exe` (windows executable) and place it in your default directory for `wine` programs (usually `~/.wine/drive_c`).     
+6. Run the `OpenBUGS` installer:
+    - Open `XQuartz` and a Terminal Window;
+    - Move to the directory where you placed the `OpenBUGS` executable you downloaded in step 2;
+    - Type: `wine OpenBUGS323setup.exe`;
+    - Wait for a while and then follow the prompts to install --- remember the directory you created to install it (default is `~/[username]/.wine/drive_c/Program Files/OpenBUGS323`)
+    - NB: There may be an error at the end, this is OK. Close down the Terminal Window
+7. It is possible that you need to specify the installation directory to tell your system specifically where to look for `BUGS`. Typically this will mean adding the option `bugs.directory = "/Users/yourusername/.wine/drive_c/Program Files/OpenBUGS232"` (or similar, depending on where you have installed the software!) to the call to the `bugs` function under `R2OpenBUGS`. Note that you need to replace "yourusername" with your Mac's user name.
+
+Notice that, if you like, you can install `R` under `wine` (rather than natively in `Mac OS`).  Download the `MS Windows` executable file from `CRAN` and repeat the instructions above, replacing the command `wine OpenBUGS323setup.exe` with the command `wine R-XXXX.exe`, where `R-XXXX.exe` is the name of the executable file.
+
+::: {.callout-warning}
+There are some reports that `OpenBUGS` may fail to work on some `Mac OS` versions. Sometimes, when trying to use `OpenBUGS` from `R`, it will complain that it can't find the programme. The `bugs` function in the `R2OpenBUGS` package takes an additional input `OpenBUGS.pgm`, which should be set to the full path to the `OpenBUGS` executable file. You can try and issue the `R` command `Sys.which("OpenBUGS")` at a `R` terminal and see whether it returns a full path and then pass *that* string as value for `OpenBUGS.pgm`, eg if `Sys.which("OpenBUGS")` returns the string `/usr/local/bin/OpenBUGS`, then set 
+```{r eval=FALSE}
+bugs(..., OpenBUGS.pgm="/usr/local/bin/OpenBUGS")
+```
+:::
+
+In addition, you can also install `JAGS`, following these steps, as detailed at the webpage [http://www.jkarreth.net/bayes-icpsr.html#jagsmac](http://www.jkarreth.net/bayes-icpsr.html#jagsmac).
+
+1. Install the most recent version of `R` from the [`CRAN` website](https://cran.r-project.org/bin/macosx/).    
+2. (Optional) Download and install [RStudio](https://rstudio.com/products/rstudio/download/#download) (NB: select the version for the your release of `MacOS`!).     
+3. Install `Clang` (currently `clang-8.0.0.pkg`) and GNU Fortran (currently, `gfortran-6.1.pkg.dmg`) from the [CRAN tools directory](http://cran.r-project.org/bin/macosx/tools/). Note that the most updated release for these may vary so check you select the correct one.     
+4. Now install `JAGS` version 4.3.1 (`JAGS-4.3.1.pkg`) from [here](https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Mac%20OS%20X/JAGS-4.3.1.pkg/download). Detailed instructions quoted from the `JAGS` readme file:
+    - Download the disk image from the `JAGS` website.
+    - Double click on the disk image to mount (this may not be required).
+    - Double click on the `JAGS-4.3.1.pkg` file within the mounted disk image.
+    - Follow the instructions in the installer. If you receive a warning that this software cannot be installed because it comes from an unidentified developer, you need to go to "System Preferences"" > "Security & Privacy"", and authorize the installation there before proceeding.
+    - Authenticate as the administrative user. The first user you create when setting up `Mac OS X` has administrator privileges by default.
+5. Start the Terminal and type `jags` to see if you receive the message: Welcome to `JAGS 4.3.1`.    
+6. Open `R` and install the packages `R2jags`, `coda`, `R2WinBUGS`, `lattice`, and `rjags`, by typing `install.packages(c("R2jags", "coda", "R2WinBUGS", "lattice", "rjags"))` in the `R` command line.
+
+You may also try installing `JAGS` on your `Mac` using [MacPorts](https://ports.macports.org/port/jags/), by typing in your terminal
+```
+sudo port install jags
+```
+
+::: {.callout-tip}
+**NB**: [This](https://sourceforge.net/p/mcmc-jags/discussion/610037/thread/07e08a3605/?limit=25#1160) post may be helpful in finding instructions to install `JAGS` under `MacOs`. In general, the [`JAGS`](https://sourceforge.net/projects/mcmc-jags/) `sourceforge` page has several posts/requests for help that you may find very similar to your own.
+:::
+:::
+

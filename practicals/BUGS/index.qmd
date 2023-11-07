@@ -1,0 +1,126 @@
+---
+title: "Practical: Network meta-analysis"
+output: 
+  pdf_document
+format:
+  pdf
+links: 
+  - name: ""
+    icon: slideshare
+    icon_pack: fab
+    # url: /slides/07_NMA/index.html
+  - name: "PDF version"
+    # url: practical6.pdf
+    icon: file-pdf
+    icon_pack: fas
+---
+
+<!-- ::: {.content-hidden when-format="pdf"} -->
+<!-- {{< include /practical/_info.qmd >}} -->
+<!-- ::: -->
+
+
+## 1. Introduction
+
+The data from the smoking cessation studies discussed in the lecture are
+included in the file [`smoke.Rdata`](smoke.Rdata), which includes a list with the
+relevant variables. The data include the following variables:
+
+-   `NS`: the total number of studies included in our analysis (24);
+
+-   `NT`: the total number of interventions considered (4);
+
+-   `na`: a vector containing the number of arms included in each of the
+    studies;
+
+-   `r`: a matrix with `NS` rows and `NT` columns, containing the number
+    of subjects that in each study and under each treatment arms have
+    been observed to quit smoking;
+
+-   `n`: a matrix with `NS` rows and `NT` columns, containing the total
+    number of subjects observed in each study and under each treatment
+    arms;
+
+-   `t`: a matrix with `NS` rows and 3 columns, identifying the label
+    associated with the treatments included in each of the studies.
+    Notice that there are 3 columns because all studies have at most 3
+    treatment involved (i.e. all studies compare either 2 or 3
+    treatments --- cfr. the lecture slides). The treatments are labelled
+    as 1 = No intervention; 2 = Self-help; 3 = Individual counselling; 4
+    = Group counselling.
+
+The <tt>R</tt> script [`NMA.R`](NMA.R) guides you through the
+analysis.
+
+## 2. Fixed effects NMA
+
+1.  Save the `.Rdata` file to your computer and then load the data into
+    your <tt>R</tt> workspace. Explore the data list
+    and check you understand what the data mean.
+
+2.  Save the file [`smokefix_model.txt`](smokefix_model.txt) to your computer. Open it and go
+    through the code, making sure you understand it.
+
+3.  Follow the <tt>R</tt> script and run the model
+    calling <tt>OpenBUGS</tt> in the background,
+    firstly without burn-in iterations.
+
+4.  Follow the <tt>R</tt> script and produce
+    traceplots to check convergence.
+
+5.  Follow the <tt>R</tt> script and re-run the model,
+    this time monitoring all the relevant parameters.
+
+## 3. Random effects NMA
+
+1.  Save the file [`smokere_model.txt`](smokere_model.txt) to your computer. Open it and go
+    through the code, making sure you understand it. Inspect
+    particularly the difference with the fixed effects model.
+
+2.  Follow the <tt>R</tt> script and run the model
+    calling <tt>OpenBUGS</tt> in the background.
+    Comment on convergence and compare the output with the fixed
+    effect model. Are there any striking differences?
+
+3.  Follow the <tt>R</tt> script and perform the
+    economic analysis, combining the output of your Bayesian Random
+    Effects NMA and using `BCEA` to post-process the results.
+
+
+## 4. Visualising heterogeneity and "random" vs "fixed" effects
+
+The R script [`make_plots.R`](make_plots.R) can be used to post-process the data and the outputs from the two models above and produce the visualisations shown in the lecture slides. 
+
+The script uses the current version of the package `bmhe`, which includes all the utility functions helpful for the various practicals in the module. You need to install it from `GitHub`, using the following commands.
+
+```{r echo=TRUE,eval=FALSE}
+# First installs the package 'remotes', which can be used to install packages directly from GitHub
+install.packages("remotes")
+
+# Then use it to install 'bmhe'
+remotes::install_github("giabaio/bmhe_utils")
+```
+
+The code assumes you have downloaded the data and model codes referred above. If you've actually run the models in points 2. and 3. you don't need to run the following lines
+
+```{r eval=FALSE}
+# FIXED EFFECTS MODEL
+# Initial values
+inits <- list(list(mu=rep(0,24), d=c(NA,0,0,0)),
+              list(mu=rep(-1,24), d=c(NA,1,1,1)))
+res <- bugs(model="smokefix_model.txt", data=smoke.list, inits=inits,
+           parameters=c("d","or","L","pq"),
+           n.chains=2, n.burnin=1000, n.iter=20000)
+```
+and
+```{r eval=FALSE}
+# RANDOM EFFECTS MODEL.  Check convergence of random effects SD in particular
+inits <- list(list(mu=rep(0,24), d=c(NA,0,0,0), sd=1),
+             list(mu=rep(-1,24), d=c(NA,1,1,1), sd=2))
+
+res2 <- bugs(model="smokere_model.txt", data=smoke.list, inits=inits,
+           parameters=c("or", "d", "sd", "pq", "L"),
+           n.chains=2, n.burnin=1000, n.iter=20000)
+```
+
+from the file `make_plots.R`: if you've already run the script `NMA.R`, then the objects `res` and `res2` will already be present in your `R` workspace.

@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>⁣7. Evidence synthesis and network meta-analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Gianluca Baio" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
+    <!-- (Re)Defines a bunch of LaTeX commands that can then be used directly in the .Rmd file as '\command{...}' -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: {
+        /* This enables color macros */
+        extensions: ["color.js"],
+        Macros: {
+          /* Normal font */
+          normal: ["{\\style{font-family:inherit; font-size: 100%;}{\\text{#1}}}",1],
+          /* Probability & mathematical symbols */
+          Pr: "{\\style{font-family:inherit; font-size: 110%;}{\\text{Pr}}}",
+          exp: "{\\style{font-family:inherit; font-size: 105%;}{\\text{exp}}}",
+          log: "{\\style{font-family:inherit; font-size: 105%;}{\\text{log}}}",
+          ln: "{\\style{font-family:inherit; font-size: 105%;}{\\text{ln}}}",
+          logit: "{\\style{font-family:inherit; font-size: 100%;}{\\text{logit}}}",
+          HR: "{\\style{font-family:inherit; font-size: 105%;}{\\text{HR}}}",
+          OR: "{\\style{font-family:inherit; font-size: 105%;}{\\text{OR}}}",
+          E: "{\\style{font-family:inherit; font-size: 105%;}{\\text{E}}}",
+          Var: "{\\style{font-family:inherit; font-size: 105%;}{\\text{Var}}}",
+          Cov: "{\\style{font-family:inherit; font-size: 105%;}{\\text{Cov}}}",
+          Corr: "{\\style{font-family:inherit; font-size: 105%;}{\\text{Corr}}}",
+          DIC: "{\\style{font-family:inherit; font-size: 105%;}{\\text{DIC}}}",
+          se: "{\\style{font-family:inherit; font-size: 100%;}{\\text{se}}}",
+          sd: "{\\style{font-family:inherit; font-size: 100%;}{\\text{sd}}}",
+          kld: "{\\style{font-family:inherit; font-size: 100%;}{\\text{KLD}}}",
+          /* Distributions */
+          dnorm: "{\\style{font-family:inherit;}{\\text{Normal}}}",
+          dt: "{\\style{font-family:inherit;}{\\text{t}}}",
+          ddirch: "{\\style{font-family:inherit;}{\\text{Dirichlet}}}",
+          dmulti: "{\\style{font-family:inherit;}{\\text{Multinomial}}}",
+          dbeta: "{\\style{font-family:inherit;}{\\text{Beta}}}",
+          dgamma: "{\\style{font-family:inherit;}{\\text{Gamma}}}",
+          dbern: "{\\style{font-family:inherit;}{\\text{Bernoulli}}}",
+          dbin: "{\\style{font-family:inherit;}{\\text{Binomial}}}",
+          dpois: "{\\style{font-family:inherit;}{\\text{Poisson}}}",
+          dweib: "{\\style{font-family:inherit;}{\\text{Weibull}}}",
+          dexp: "{\\style{font-family:inherit;}{\\text{Exponential}}}",
+          dlnorm: "{\\style{font-family:inherit;}{\\text{logNormal}}}",
+          dunif: "{\\style{font-family:inherit;}{\\text{Uniform}}}",
+          /* LaTeX formatting */
+          bm: ["{\\boldsymbol #1}",1],
+          /* These create macros to typeset numbers in maths with the basic font */
+          0: "{\\style{font-family:inherit; font-size: 105%;}{\\text{0}}}",
+          1: "{\\style{font-family:inherit; font-size: 105%;}{\\text{1}}}",
+          2: "{\\style{font-family:inherit; font-size: 105%;}{\\text{2}}}",
+          3: "{\\style{font-family:inherit; font-size: 105%;}{\\text{3}}}",
+          4: "{\\style{font-family:inherit; font-size: 105%;}{\\text{4}}}",
+          5: "{\\style{font-family:inherit; font-size: 105%;}{\\text{5}}}",
+          6: "{\\style{font-family:inherit; font-size: 105%;}{\\text{6}}}",
+          7: "{\\style{font-family:inherit; font-size: 105%;}{\\text{7}}}",
+          8: "{\\style{font-family:inherit; font-size: 105%;}{\\text{8}}}",
+          9: "{\\style{font-family:inherit; font-size: 105%;}{\\text{9}}}",
+          /* Health economics quantities */
+          icer: "{\\style{font-family:inherit; font-size: 100%;}{\\text{ICER}}}",
+          nb: "{\\style{font-family:inherit; font-size: 100%;}{\\text{NB}}}",
+          inb: "{\\style{font-family:inherit; font-size: 100%;}{\\text{INB}}}",
+          ib: "{\\style{font-family:inherit; font-size: 100%;}{\\text{IB}}}",
+          eib: "{\\style{font-family:inherit; font-size: 100%;}{\\text{EIB}}}",
+          ol: "{\\style{font-family:inherit; font-size: 100%;}{\\text{OL}}}",
+          ceac: "{\\style{font-family:inherit; font-size: 100%;}{\\text{CEAC}}}",
+          evpi: "{\\style{font-family:inherit; font-size: 100%;}{\\text{EVPI}}}",
+          evppi: "{\\style{font-family:inherit; font-size: 100%;}{\\text{EVPPI}}}",
+          evsi: "{\\style{font-family:inherit; font-size: 100%;}{\\text{EVSI}}}"
+        }
+      }
+    });
+    </script>
+    <link rel="stylesheet" href="../assets/ucl-stats.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+class: title-slide
+
+# &amp;#8291;7. Evidence synthesis and network meta-analysis
+
+## Gianluca Baio
+
+### [Department of Statistical Science](https://www.ucl.ac.uk/statistics/) | University College London    
+
+.title-small[
+&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#00acee;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"&gt;&lt;/path&gt;&lt;/svg&gt;  [g.baio@ucl.ac.uk](mailto:g.baio@ucl.ac.uk)
+&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#EA7600;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"&gt;&lt;/path&gt;&lt;/svg&gt;  [https://gianluca.statistica.it/](https://gianluca.statistica.it/)
+&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#EA7600;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"&gt;&lt;/path&gt;&lt;/svg&gt;  [https://egon.stats.ucl.ac.uk/research/statistics-health-economics/](https://egon.stats.ucl.ac.uk/research/statistics-health-economics/)
+&lt;svg viewBox="0 0 496 512" style="position:relative;display:inline-block;top:.1em;fill:black;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt;  [https://github.com/giabaio](https://github.com/giabaio)
+&lt;svg viewBox="0 0 496 512" style="position:relative;display:inline-block;top:.1em;fill:black;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;&lt;/svg&gt;  [https://github.com/StatisticsHealthEconomics](https://github.com/StatisticsHealthEconomics)
+&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#00acee;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"&gt;&lt;/path&gt;&lt;/svg&gt;  [@gianlubaio](https://twitter.com/gianlubaio) &amp;nbsp;&amp;nbsp; &lt;svg viewBox="0 0 448 512" style="position:relative;display:inline-block;top:.1em;fill:#563acc;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"&gt;&lt;/path&gt;&lt;/svg&gt;  [@gianlubaio@mas.to](https://mas.to/@gianlubaio)      
+]
+
+&lt;br&gt; 
+
+### STAT0019 - Bayesian Methods in Health Economics, UCL
+
+&lt;!--
+Adds a departmental logo on the right-bottom corner (Only with 'ucl-stats')
+--&gt;
+.logo-stats[]
+
+&lt;!--
+Can also add sticky notes:
+&lt;p style="position: absolute; top:75%; left:2.5%; font-family: Nanum Pen Script; font-size:85%; text-decoration: none; color: #000; background: #ffc; display: block; height:6.3em; width:6.3em; padding: .5em; box-shadow: 5px 5px 7px rgba(33,33,33,.7); transform: rotate(6deg); border-bottom-right-radius: 60px 5px;"&gt;Check out our departmental podcast "Random Talks" on Soundcloud!&amp;nbsp;&lt;a href="https://soundcloud.com/uclsound/sets/sample-space"; title="Random Talks"&gt;&lt;svg viewBox="0 0 640 512" style="position:relative;display:inline-block;top:.1em;fill:#FE5000;height:0.8em;bottom:1em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M111.4 256.3l5.8 65-5.8 68.3c-.3 2.5-2.2 4.4-4.4 4.4s-4.2-1.9-4.2-4.4l-5.6-68.3 5.6-65c0-2.2 1.9-4.2 4.2-4.2 2.2 0 4.1 2 4.4 4.2zm21.4-45.6c-2.8 0-4.7 2.2-5 5l-5 105.6 5 68.3c.3 2.8 2.2 5 5 5 2.5 0 4.7-2.2 4.7-5l5.8-68.3-5.8-105.6c0-2.8-2.2-5-4.7-5zm25.5-24.1c-3.1 0-5.3 2.2-5.6 5.3l-4.4 130 4.4 67.8c.3 3.1 2.5 5.3 5.6 5.3 2.8 0 5.3-2.2 5.3-5.3l5.3-67.8-5.3-130c0-3.1-2.5-5.3-5.3-5.3zM7.2 283.2c-1.4 0-2.2 1.1-2.5 2.5L0 321.3l4.7 35c.3 1.4 1.1 2.5 2.5 2.5s2.2-1.1 2.5-2.5l5.6-35-5.6-35.6c-.3-1.4-1.1-2.5-2.5-2.5zm23.6-21.9c-1.4 0-2.5 1.1-2.5 2.5l-6.4 57.5 6.4 56.1c0 1.7 1.1 2.8 2.5 2.8s2.5-1.1 2.8-2.5l7.2-56.4-7.2-57.5c-.3-1.4-1.4-2.5-2.8-2.5zm25.3-11.4c-1.7 0-3.1 1.4-3.3 3.3L47 321.3l5.8 65.8c.3 1.7 1.7 3.1 3.3 3.1 1.7 0 3.1-1.4 3.1-3.1l6.9-65.8-6.9-68.1c0-1.9-1.4-3.3-3.1-3.3zm25.3-2.2c-1.9 0-3.6 1.4-3.6 3.6l-5.8 70 5.8 67.8c0 2.2 1.7 3.6 3.6 3.6s3.6-1.4 3.9-3.6l6.4-67.8-6.4-70c-.3-2.2-2-3.6-3.9-3.6zm241.4-110.9c-1.1-.8-2.8-1.4-4.2-1.4-2.2 0-4.2.8-5.6 1.9-1.9 1.7-3.1 4.2-3.3 6.7v.8l-3.3 176.7 1.7 32.5 1.7 31.7c.3 4.7 4.2 8.6 8.9 8.6s8.6-3.9 8.6-8.6l3.9-64.2-3.9-177.5c-.4-3-2-5.8-4.5-7.2zm-26.7 15.3c-1.4-.8-2.8-1.4-4.4-1.4s-3.1.6-4.4 1.4c-2.2 1.4-3.6 3.9-3.6 6.7l-.3 1.7-2.8 160.8s0 .3 3.1 65.6v.3c0 1.7.6 3.3 1.7 4.7 1.7 1.9 3.9 3.1 6.4 3.1 2.2 0 4.2-1.1 5.6-2.5 1.7-1.4 2.5-3.3 2.5-5.6l.3-6.7 3.1-58.6-3.3-162.8c-.3-2.8-1.7-5.3-3.9-6.7zm-111.4 22.5c-3.1 0-5.8 2.8-5.8 6.1l-4.4 140.6 4.4 67.2c.3 3.3 2.8 5.8 5.8 5.8 3.3 0 5.8-2.5 6.1-5.8l5-67.2-5-140.6c-.2-3.3-2.7-6.1-6.1-6.1zm376.7 62.8c-10.8 0-21.1 2.2-30.6 6.1-6.4-70.8-65.8-126.4-138.3-126.4-17.8 0-35 3.3-50.3 9.4-6.1 2.2-7.8 4.4-7.8 9.2v249.7c0 5 3.9 8.6 8.6 9.2h218.3c43.3 0 78.6-35 78.6-78.3.1-43.6-35.2-78.9-78.5-78.9zm-296.7-60.3c-4.2 0-7.5 3.3-7.8 7.8l-3.3 136.7 3.3 65.6c.3 4.2 3.6 7.5 7.8 7.5 4.2 0 7.5-3.3 7.5-7.5l3.9-65.6-3.9-136.7c-.3-4.5-3.3-7.8-7.5-7.8zm-53.6-7.8c-3.3 0-6.4 3.1-6.4 6.7l-3.9 145.3 3.9 66.9c.3 3.6 3.1 6.4 6.4 6.4 3.6 0 6.4-2.8 6.7-6.4l4.4-66.9-4.4-145.3c-.3-3.6-3.1-6.7-6.7-6.7zm26.7 3.4c-3.9 0-6.9 3.1-6.9 6.9L227 321.3l3.9 66.4c.3 3.9 3.1 6.9 6.9 6.9s6.9-3.1 6.9-6.9l4.2-66.4-4.2-141.7c0-3.9-3-6.9-6.9-6.9z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp;&lt;/p&gt;
+
+&lt;p style="position: absolute; top:53%; left:6.5%; font-family: Nanum Pen Script; font-size:85%; text-decoration: none; color: #000; background: #ffc; display: block; height:6.3em; width:6.3em; padding: .5em; box-shadow: 5px 5px 7px rgba(33,33,33,.7); transform: rotate(6deg); border-bottom-right-radius: 60px 5px;"&gt;Follow our departmental social media accounts&amp;nbsp;&lt;a href="https://twitter.com/stats_ucl"; title="@stats_UCL"&gt;&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#00acee;height:0.8em;bottom:1em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;a href="https://www.linkedin.com/in/statistical-science-ucl-906b9a201"; title="LinkedIn"&gt;&lt;svg viewBox="0 0 448 512" style="position:relative;display:inline-block;top:.1em;fill:#2867b2;height:0.8em;bottom:1em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp;&lt;/p&gt;
+--&gt;
+
+&lt;!-- This adds a footer (optional and with other possibilities...) 
+     For example, can use &lt;span&gt;&lt;a href="https://gianluca.statistica.it/"&gt;&lt;img src="assets/logo.png" title="Go home" width="2.0%"&gt;&lt;/a&gt;&lt;/span&gt; to add the Samp Tux log,
+     or change the bottom space to align the text, etc
+.footer-left[
+&lt;span style="position: relative; bottom: 0px; color: #D5D5D5;"&gt; &amp;nbsp; &amp;copy; Gianluca Baio (UCL)&lt;/span&gt;
+]
+--&gt;
+
+
+---
+
+layout: true
+
+.my-footer[ 
+.alignleft[
+&amp;nbsp; &amp;copy; Gianluca Baio (UCL) | &amp;nbsp;&lt;a style=";" href="https://mas.to/@gianlubaio" title="Follow me on Mastodon"&gt;&lt;svg viewBox="0 0 448 512" style="position:relative;display:inline-block;top:.1em;fill:#bcc0c4;height:0.8em;bottom:1em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.54 102.54 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5zm-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp; &amp;nbsp;&lt;a href="https://twitter.com/giabaio"; title="Follow me on Twitter"&gt;&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#bcc0c4;height:0.8em;bottom:1em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp; &amp;nbsp;&lt;a href="https://github.com/giabaio"; title="Check out my repos"&gt;&lt;svg viewBox="0 0 496 512" style="position:relative;display:inline-block;top:.1em;fill:#bcc0c4;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp; &amp;nbsp;&lt;a href="mailto:g.baio@ucl.ac.uk"; title="Email me"&gt;&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#bcc0c4;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp; &amp;nbsp;&lt;a href="https://gianluca.statistica.it"; title="Visit my website"&gt;&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:#bcc0c4;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp;
+]
+.aligncenter[
+.mydropdown[
+.mydropbtn[
+&lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:white;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM273 369.9l135.5-135.5c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L256 285.1 154.4 183.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L239 369.9c9.4 9.4 24.6 9.4 34 0z"&gt;&lt;/path&gt;&lt;/svg&gt; 
+]
+.mydropdown-content[
+[1. Introduction](../01_Intro/index.html)
+[2. BUGS](../02_BUGS/index.html)
+[3. MCMC](../03_MCMC/index.html)
+[4. Intro HTA](../04_Intro_HE/index.html)
+[5. ILD](../05_ILD/index.html)
+[6. ALD](../06_ALD/index.html)
+[7. NMA](../07_NMA/index.html)
+[8. Survival](../08_Survival/index.html)
+[9. Markov models](../09_MM/index.html)
+[10. Missing data](../10_Missing/index.html)
+[11. VoI](../11_VoI/index.html) 
+]
+]
+&amp;#8291;7. Evidence synthesis and network meta-analysis 
+]
+.alignright[
+&amp;nbsp;&lt;a target="_self" href="../../index.html"; title="Back to STAT0019 website"&gt;&lt;svg viewBox="0 0 576 512" style="position:relative;display:inline-block;top:.1em;fill:#bcc0c4;height:1em;bottom:1em;" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"&gt;&lt;/path&gt;
+&lt;/svg&gt;&lt;/a&gt;&amp;nbsp; &amp;nbsp; STAT0019 
+]
+] 
+
+&lt;!-- Could also add a dropdown somewhere else in the slide 
+.dropdown[
+.dropbtn[
+Other lectures &lt;svg viewBox="0 0 512 512" style="position:relative;display:inline-block;top:.1em;fill:white;height:0.8em;" xmlns="http://www.w3.org/2000/svg"&gt;  &lt;path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM273 369.9l135.5-135.5c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L256 285.1 154.4 183.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L239 369.9c9.4 9.4 24.6 9.4 34 0z"&gt;&lt;/path&gt;&lt;/svg&gt;
+]
+.dropdown-content[
+[Lecture 1](../01_Intro/)
+[Lecture 2](../02_BUGS/)
+[Lecture 3](../03_MCMC/)
+[Lecture 4](../04_Intro_HE/)
+[Lecture 5](../05_ILD/)
+[Lecture 6](../06_Survival/)
+[Lecture 7](../07_ALD/)
+[Lecture 8](../08_NMA/)
+[Lecture 9](../09_MM/)
+[Lecture 10](../10_Missing/)
+[Lecture 11](../11_VoI/)
+]
+]
+--&gt;
+
+---
+
+# Summary
+
+- Motivation for Network Meta Analysis (NMA)
+   
+   - Example: Smoking cessation
+
+- Fixed effects meta-analysis
+
+- Random effects meta-analysis
+
+
+&lt;span style="display:block; margin-top: 4em ;"&gt;&lt;/span&gt;
+
+.content-box-beamer[
+### **References** 
+
+&lt;span style="display:block; margin-top: 20px ;"&gt;&lt;/span&gt;
+
+&lt;svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;
+  [ comment ]
+  &lt;path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zM128 134c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm0 64c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm253.4 250H96c-17.7 0-32-14.3-32-32 0-17.6 14.4-32 32-32h285.4c-1.9 17.1-1.9 46.9 0 64z"&gt;&lt;/path&gt;
+&lt;/svg&gt; &lt;i&gt;Doing Meta-Analysis in R&lt;/i&gt;  .button[&lt;i class="fab fa-firefox"&gt;&lt;/i&gt;  [Book website](https://bookdown.org/MathiasHarrer/Doing_Meta_Analysis_in_R/)] .button[&lt;i class="fab fa-github"&gt;&lt;/i&gt; [Code](https://mathiasharrer.github.io/Doing-Meta-Analysis-in-R/)]
+
+&lt;svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;
+  [ comment ]
+  &lt;path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zM128 134c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm0 64c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm253.4 250H96c-17.7 0-32-14.3-32-32 0-17.6 14.4-32 32-32h285.4c-1.9 17.1-1.9 46.9 0 64z"&gt;&lt;/path&gt;
+&lt;/svg&gt; &lt;i&gt;Evidence Synthesis for Decision Making in Healthcare&lt;/i&gt;  .button[&lt;img src="../img/ucl-icon.png" width="18%"&gt; [Library](http://web.a.ebscohost.com.libproxy.ucl.ac.uk/ehost/detail/detail?vid=0&amp;sid=a0d65028-2c2d-43da-ab5b-3dd7dc63cfd2%40sdc-v-sessmgr03&amp;bdata=JkF1dGhUeXBlPWlwLHNoaWImc2l0ZT1laG9zdC1saXZlJnNjb3BlPXNpdGU%3d#AN=1689059&amp;db=nlebk)] .button[&lt;img src="../img/wiley.png" width="10%"&gt; [Book website](https://www.wiley.com/en-gb/Evidence+Synthesis+for+Decision+Making+in+Healthcare-p-9780470061091)]
+
+&lt;svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;
+  [ comment ]
+  &lt;path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zM128 134c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm0 64c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm253.4 250H96c-17.7 0-32-14.3-32-32 0-17.6 14.4-32 32-32h285.4c-1.9 17.1-1.9 46.9 0 64z"&gt;&lt;/path&gt;
+&lt;/svg&gt; &lt;i&gt;Bayesian Cost-Effectiveness Analysis with the R package BCEA&lt;/i&gt;  .button[&lt;img src="../img/springer.png" width="8%"&gt; [Book website (Springer)](http://www.springer.com/us/book/9783319557168)] .button[&lt;i class="fab fa-firefox"&gt;&lt;/i&gt; [Book website](https://gianluca.statistica.it/book/bcea/)]
+
+&lt;svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;
+  [ comment ]
+  &lt;path d="M448 360V24c0-13.3-10.7-24-24-24H96C43 0 0 43 0 96v320c0 53 43 96 96 96h328c13.3 0 24-10.7 24-24v-16c0-7.5-3.5-14.3-8.9-18.7-4.2-15.4-4.2-59.3 0-74.7 5.4-4.3 8.9-11.1 8.9-18.6zM128 134c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm0 64c0-3.3 2.7-6 6-6h212c3.3 0 6 2.7 6 6v20c0 3.3-2.7 6-6 6H134c-3.3 0-6-2.7-6-6v-20zm253.4 250H96c-17.7 0-32-14.3-32-32 0-17.6 14.4-32 32-32h285.4c-1.9 17.1-1.9 46.9 0 64z"&gt;&lt;/path&gt;
+&lt;/svg&gt; &lt;i&gt;Data Analysis Using Regression and Multilevel/Hierarchical Models&lt;/i&gt;  .button[&lt;img src="../img/ucl-icon.png" width="18%"&gt; [Library](https://ucl-new-primo.hosted.exlibrisgroup.com/primo-explore/fulldisplay?docid=UCL_LMS_DS21154188240004761&amp;context=L&amp;vid=UCL_VU2&amp;lang=en_US&amp;search_scope=CSCOP_UCL&amp;adaptor=Local%20Search%20Engine&amp;tab=local&amp;query=any,contains,Data%20analysis%20using%20regression%20and%20multilevel&amp;offset=0)] .button[&lt;img src="../img/cup.png" width="10%"&gt; [Book website (CUP)]()] .button[&lt;i class="fab fa-firefox"&gt;&lt;/i&gt; [Book website](http://www.stat.columbia.edu/~gelman/book/)]
+
+&lt;svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;position:relative;display:inline-block;top:.1em;fill:orange;"&gt;  [ comment ]  &lt;path d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"&gt;&lt;/path&gt;&lt;/svg&gt;  [NICE DSU Evidence Synthesis Technical Support Document Series](http://www.nicedsu.org.uk)    
+
+]
+
+---
+
+# Multiparameter evidence synthesis 
+
+## Introduction
+
+- Unusual for a policy question to be informed by a single study
+   - Must use all available and relevant evidence
+   
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+
+.content-box-beamer[
+### Multiparameter evidence synthesis
+
+Learning about more than one quantity from combination of direct and indirect evidence.
+]
+
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+- Example: .blue[Network Meta Analysis (NMA)]
+
+---
+
+# Network Meta Analysis
+
+## Simplest example
+
+- New treatment C: been trialled against old treatment B, but not to A
+
+- For health economic evaluation need to compare A/B/C together
+
+- &lt;svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; Learn about C/A effect from C/B and B/A trial data
+
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+
+--
+
+- Also called "mixed treatment comparisons"
+   - Since can also “mix” direct and indirect data on same comparison...
+
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+
+--
+
+&lt;svg viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;position:relative;display:inline-block;top:.1em;fill:red;"&gt;  [ comment ]  &lt;path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"&gt;&lt;/path&gt;&lt;/svg&gt; Common in UK health technology assessment, but require some statistical skills!
+
+---
+
+# Smoking cessation trial
+
+.pull-left[
+## Data
+&lt;div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:470px; overflow-x: scroll; width:100%; "&gt;&lt;table class=" lightable-paper table" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto; font-size: 12px; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;"&gt; Comparison &lt;/th&gt;
+   &lt;th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;"&gt; A: No intervention &lt;/th&gt;
+   &lt;th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;"&gt; B: Self-help &lt;/th&gt;
+   &lt;th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;"&gt; C: Individual counselling &lt;/th&gt;
+   &lt;th style="text-align:center;position: sticky; top:0; background-color: #FFFFFF;"&gt; D: Group counselling &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;vertical-align: middle !important;" rowspan="3"&gt; AB &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 79 / 702 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 77 / 694 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 18 / 671 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 21 / 535 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 8 / 116 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 19 / 149 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;vertical-align: middle !important;" rowspan="14"&gt; AC &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 75 / 731 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 363 / 714 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 2 / 106 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 / 205 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 58 / 549 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 237 / 1561 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 0 / 33 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 / 48 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 3 / 100 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 31 / 98 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 1 / 31 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 26 / 95 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 6 / 39 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 17 / 77 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 64 / 642 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 107 / 761 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 5 / 62 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 8 / 90 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 20 / 234 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 34 / 237 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 95 / 1107 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 143 / 1031 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 15 / 187 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 36 / 504 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 78 / 584 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 73 / 675 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   &lt;td style="text-align:center;"&gt; 69 / 1177 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 54 / 888 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;"&gt; ACD &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 / 140 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 23 / 140 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 / 138 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;"&gt; AD &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 / 20 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 / 20 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;"&gt; BC &lt;/td&gt;
+   &lt;td style="text-align:center;vertical-align: middle !important;" rowspan="5"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 20 / 49 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 16 / 43 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;"&gt; BCD &lt;/td&gt;
+   
+   &lt;td style="text-align:center;"&gt; 11 / 78 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12 / 85 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 29 / 170 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;"&gt; BD &lt;/td&gt;
+   
+   &lt;td style="text-align:center;"&gt; 7 / 66 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 32 / 127 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;font-weight: bold;vertical-align: middle !important;" rowspan="2"&gt; CD &lt;/td&gt;
+   
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12 / 76 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 20 / 74 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   
+   
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 9 / 55 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 3 / 26 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/div&gt;
+]
+.pull-right[
+
+## Outcome
+
+- Successfully quit smoking by 6-12 months
+
+- Number of success / number of participants
+
+
+## Set up
+
+- 24 trials in total
+
+- Network of comparisons involving 4 interventions
+
+- Not all interventions tested against all others!
+
+
+## Objective
+
+- Estimate the overall effectiveness of the interventions
+
+- Potentially add cost-effectiveness analysis
+
+]
+
+---
+
+count: false
+# Smoking cessation trial
+
+## Network of comparisons
+
+.pull-left[
+&lt;center&gt;&lt;img src=./img/network1.png width='100%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+]
+.pull-right[
+
+- All comparisons have at least one trial with direct data
+
+- We wish to enhance direct with indirect evidence 
+
+- e.g. A-D comparison (only 2 direct trials) improved by including A-C, C-D trials (15 + 4)
+
+]
+
+---
+
+# In general...
+
+## Network of comparisons
+
+.pull-left[
+&lt;center&gt;&lt;img src=./img/network2.png width='100%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+]
+.pull-right[
+
+- In other applications, might want to learn about comparisons with no direct trial evidence
+
+- e.g. how much better than current treatment C is new treatment D?
+
+]
+
+---
+
+# Fixed effects network meta-analysis
+
+- Log odds of response in each arm modelled as effect of .red[study] `\(\class{red}{s}\)` plus effect of .red[treatment] `\(\class{red}{t}\)` `\((s = 1, \ldots , NS\)`, different values of `\(t\)` in each `\(s)\)`
+
+`\begin{align}
+&amp; \class{myblue}{r_{st}} \class{myblue}{\sim} \class{myblue}{\dbin(p_{st},n_{st})} \\
+&amp; \class{myblue}{\logit(p_{st})} \class{myblue}{=}\class{myblue}{\mu_s + \delta_{st}} \\
+&amp; \class{myblue}{\delta_{st}}\class{myblue}{\sim} \class{myblue}{d_t - d_{t_{s0}}}
+\end{align}`
+
+--
+
+&lt;span style="display:block; margin-top: 30px ;"&gt;&lt;/span&gt;
+- .blue[**Study effects**] `\(\mu_s\)`: log odds in baseline group of study `\(s\)`, considered independent between studies
+
+
+&lt;span style="display:block; margin-top: 30px ;"&gt;&lt;/span&gt;
+- .blue[**Treatment effects**]
+
+   `\(\delta_{st}\)`: compared to .red[study] `\(\class{red}{s}\)` baseline `\(t_{s_{s0}}\)`    
+   `\(d_t\)`: compared to .red[overall baseline] treatment `\(t=1\)` (e.g. placebo) `\(\Rightarrow d_1 :=0\)`
+      - This essentially means that the effect of treatment `\(t=1\)` versus the effect of the baseline treatment (again `\(t=1\)`) is... nothing `\((=0)\)`!
+   
+   
+&lt;span style="display:block; margin-top: 30px ;"&gt;&lt;/span&gt;
+- "Fixed" effects: `\(d_t\)` are .red[identical] in each study `\(s\)`
+
+---
+
+# Estimating effects of indirect comparisons
+
+.panelset[
+
+.panel[
+.panel-name[Indirect effects]
+## Smoking cessation example
+
+- `\(\log \OR\)`s `\(d_B\)`, `\(d_C\)`, `\(d_D\)` (compared to "baseline" treatment A) are directly identifiable from A-B, A-C, A-D trials
+
+
+**But**: can deduce .red[indirect comparisons] from these basic parameters (with assumptions...)
+
+- `\(\log\OR\)` of C compared to B is `\(d_C-d_B\)`
+
+- `\(\log\OR\)` of D compared to B is `\(d_D-d_B\)`
+
+- `\(\log\OR\)` of D compared to D is `\(d_D-d_C\)`
+
+**NB** This assumes .blue[**consistency**] between indirect and (potential) direct evidence!
+]
+
+.panel[
+.panel-name[Some maths...]
+- Consider `\(t=B\)`
+
+- By definition: `\(\logit(p_{st}) = \log\left(\frac{p_{st}}{1-p_{st}}\right) =\log\)` odds of the event (quit smoking), if you are in group B
+
+- Similarly, `\(\logit(p_{sA}) = \log\left(\frac{p_{sA}}{1-p_{sA}}\right) =\log\)` odds of the event (quit smoking), if you are in group A `\((\Rightarrow t=1)\)`
+
+- By definition: `\(\displaystyle \OR_{BA}=\frac{\style{font-family:inherit;}{\text{odds}}_B}{\style{font-family:inherit;}{\text{odds}}_A} \Rightarrow \log\OR_{BA}= \log\ \style{font-family:inherit;}{\text{odds}}_B - \log\ \style{font-family:inherit;}{\text{odds}}_A = \logit(p_{sB})-\logit(p_{sA})\)`
+
+- So
+`\begin{align}
+ \log\OR_{BA} &amp;= \logit(p_{sB})-\logit(p_{sA}) \\
+ &amp;= \left[\mu_s + \delta_{sB} \right] - \left[\mu_s + \delta_{sA} \right] \\
+ &amp;= \left[\mu_s +(d_B - d_A)\right] -\left[\mu_s +(d_A - d_A)\right] \\
+ &amp;= d_B -d_A \\
+ &amp;= d_B \qquad (\style{font-family:inherit;}{\text{because }} d_A=d_1:=0)
+\end{align}`
+]
+
+]
+
+
+---
+
+name: nested-index
+# Manipulating data 
+
+### Nested indices (see [Practical](../../practical/06_nma/) &amp; [Solutions](../../practical/06_nma/solutions.html))
+
+
+.panelset[
+
+.panel[
+.panel-name[Outcome]
+
+```r
+&gt; # Shows the first 2 rows...
+&gt; head(smoke.list$r,2)
+```
+
+```
+     [,1] [,2] [,3] [,4]
+*[1,]   79   77   NA   NA
+[2,]   18   21   NA   NA
+```
+
+```r
+&gt; # ...and the last 4 rows of the data for the number of quitters in each arm
+&gt; tail(smoke.list$r,4)
+```
+
+```
+      [,1] [,2] [,3] [,4]
+*[21,]   NA   11   12   29
+[22,]   NA    7   NA   32
+[23,]   NA   NA   12   20
+[24,]   NA   NA    9    3
+```
+
+```r
+&gt; # In study 1, treatments 3 (=C) and 4 (=D) are not present so the data show 'NA'
+&gt; # Similarly, in study 21, treatment 1 (=A) was not involved, so there's a 'NA'
+```
+]
+
+.panel[
+.panel-name[Sample sizes]
+
+```r
+&gt; # Similarly, shows the first 2 rows...
+&gt; head(smoke.list$n,2) 
+```
+
+```
+     [,1] [,2] [,3] [,4]
+[1,]  702  694   NA   NA
+[2,]  671  535   NA   NA
+```
+
+```r
+&gt; # ...and the last 4 rows of the data for the total sample size in each arm
+&gt; tail(smoke.list$n,4)
+```
+
+```
+      [,1] [,2] [,3] [,4]
+[21,]   NA   78   85  170
+[22,]   NA   66   NA  127
+[23,]   NA   NA   76   74
+[24,]   NA   NA   55   26
+```
+]
+
+.panel[
+.panel-name[Treatment index]
+
+```r
+&gt; # Here shows the first 2 and last 4 rows of the matrix indicating the treatment included in the comparison
+&gt; head(smoke.list$t,2)
+```
+
+```
+     t1 t2 t3
+*[1,]  1  2 NA
+[2,]  1  2 NA
+```
+
+```r
+&gt; tail(smoke.list$t,4)
+```
+
+```
+      t1 t2 t3
+*[21,]  2  3  4
+[22,]  2  4 NA
+[23,]  3  4 NA
+[24,]  3  4 NA
+```
+
+```r
+&gt; # So in study number 1, the comparison is between intervention 1 (=A) and intervention 2 (=B)
+&gt; # while in study number 21, the comparison is among interventions 2 (=B), 3 (=C) and 4(=D)
+```
+]
+
+.panel[
+.panel-name[Using nested indices]
+
+```r
+&gt; # What are the treatment involved in study 21?
+&gt; smoke.list$t[21,]
+```
+
+```
+t1 t2 t3 
+ 2  3  4 
+```
+
+```r
+&gt; # What is the number of quitters in study 21 and in the second treatment arm of that study?
+&gt; smoke.list$r[21,smoke.list$t[21,2]]
+```
+
+```
+[1] 12
+```
+
+```r
+&gt; # What is the sample size in study 21 and in the second treatment arm of that study?
+&gt; smoke.list$n[21,smoke.list$t[21,2]]
+```
+
+```
+[1] 85
+```
+]
+
+]
+
+---
+
+# Coding NMA in `BUGS`
+
+Just write out the equations-ish... 😉
+&lt;span style="display:block; margin-top: 10px ;"&gt;&lt;/span&gt;
+
+- **NB**: `t[s,a]` indicates the treatment associated with study `s` and its arm `a`
+
+- Vague priors for effects / baseline are typically OK
+   - But **not** when the number of comparisons is very small!
+
+```
+for(s in 1:NS) {
+  for (a in 1:na[s])  {
+    r[s,t[s,a]] ~ dbin(p[s,t[s,a]], n[s,t[s,a]])
+    logit(p[s,t[s,a]]) &lt;- mu[s] + delta[s,t[s,a]]
+  }
+# delta are effects compared to arm 1 of each study s
+  delta[s,t[s,1]] &lt;- 0
+  for (a in 2:na[s])  {
+    delta[s,t[s,a]] &lt;- d[t[s,a]] - d[t[s,1]]
+  }
+}
+for (i in 1:NS){
+# vague prior for baseline log-odds
+  mu[i] ~ dnorm(0,0.0001) 
+}
+# effect compared to treatment 1 (e.g. placebo)
+d[1] &lt;- 0  
+# vague prior
+for (i in 2:NT) {  
+  d[i] ~ dnorm(0, 0.0001)  
+} 
+```
+
+---
+
+# Presenting treatment effects
+
+For each treatment `\(2, \ldots, NT\)` compared to treatment 1 (the reference/baseline: eg "no intervention"/"status quo", or placebo), can back-transform the `\(\log\OR\)`s 
+```
+for (t in 2:NT) {
+  or[t] &lt;- exp(d[t])  # odds ratios
+}
+```
+
+--
+
+&lt;span style="display:block; margin-top: 10px ;"&gt;&lt;/span&gt;
+
+Then can compute the odds ratio for every other treatment pair `c, k` &amp;ndash; even if no direct comparison exist
+ 
+- `\(\OR_{ck} = \OR_{c1} / \OR_{k1}\)`
+
+```
+for (c in 1:(NT-1)) {
+  for (k in (c+1):NT) {
+    or[c,k] &lt;- exp(d[c] - d[k])
+    or[k,c] &lt;- 1/or[c,k]
+  }
+}
+
+```
+
+---
+
+# Results
+
+## Comparing direct and mixed evidence
+
+
+Direct-only odds ratios (CIs) from classical analysis of pooled individual data
+
+&lt;span style="display:block; margin-top: 20px ;"&gt;&lt;/span&gt;
+
+.pull-left[
+- Precision of D/A estimate improved by indirect C/A and C/D data 
+
+- Strong direct data for other comparisons, so not improved much by indirect evidence
+
+- C/B estimate from one direct study `\(\Rightarrow\)` pulled towards much bigger indirect C/A and B/A data
+   - evidence of heterogeneity...
+]
+.pull-right[
+
+&lt;center&gt;&lt;img src=./img/unnamed-chunk-7-1.png width='75%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+]
+
+---
+
+count: false
+# Results
+
+## Heterogeneity between individual studies
+
+.pull-left[
+
+&lt;center&gt;&lt;img src=./img/unnamed-chunk-8-1.png width='75%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+]
+.pull-right[
+
+- Classical odds ratio (CIs) for all individual trials, sorted by pairwise comparison
+
+- Heterogeneity between ORs within most comparisons
+
+- Consider "random" effects models...
+]
+
+---
+
+# Random effects NMA
+
+Replace .red[fixed effects] `\(\delta_{ts}\)` of treatment `\(t\)` in study `\(s\)`
+
+`\begin{align}
+&amp; \class{myblue}{r_{st}} \class{myblue}{\sim} \class{myblue}{\dbin(p_{st},n_{st})} \\
+&amp; \class{myblue}{\logit(p_{st})} \class{myblue}{=}\class{myblue}{\mu_s + \delta_{st}} \\
+&amp; \class{myblue}{\delta_{st}}\class{myblue}{\sim} \class{myblue}{d_t - d_{t_{s0}}}
+\end{align}`
+
+with a .red[random effect] varying between studies `\(s\)` with a Normal distribution with mean defined by the fixed effect
+`\begin{align}
+&amp; \class{myblue}{r_{st}} \class{myblue}{\sim} \class{myblue}{\dbin(p_{st},n_{st})} \\
+&amp; \class{myblue}{\logit(p_{st})} \class{myblue}{=}\class{myblue}{\mu_s + \delta_{st}} \\
+&amp; \class{myblue}{\delta_{st}\sim\dnorm(\mu_{st}^\delta, \sigma^2_{st})} \\
+&amp; \class{myblue}{\mu_{st}^\delta}\class{myblue}{\sim} \class{myblue}{d_t - d_{t_{s0}}}
+\end{align}`
+
+still with `\(\delta_{st}=0\)` for `\(t=\)` baseline arm of `\(s\)`
+
+---
+
+# Coding this in `BUGS`
+
+Equations translate relatively straight to `BUGS` model, again:
+```
+for (a in 2:na[s]) {
+  delta[s,t[s,a]] &lt;- d[t[s,a]] - d[t[s,1]]
+}
+```
+is replaced by:
+```
+for (a in 2:na[s]) {
+  delta[s,t[s,a]] ~ dnorm(md[s,t[s,a]], taud[s,t[s,a]])
+  md[s,t[s,a]] &lt;- d[t[s,a]] - d[t[s,1]]
+  taud[s,t[s,a]] &lt;- tau
+}
+d[1] &lt;- 0  
+# Priors on the mean same as fixed effects
+for (i in 2:NT) {
+  d[i] ~ dnorm(0, 0.0001) 
+}
+```
+
+**But**: a couple of complicating features...
+
+---
+
+# Constraints on random effects variances
+
+- In a NMA, we have
+   - `\(NT\)` different treatments
+   - `\((NT - 1)\)` different pooled effects, relative to treatment 1 (the baseline / reference)
+   Only 1 effect in standard meta-analysis
+
+- `\((NT-1)\)` different random effects distributions to estimate?
+   - Not feasible unless many studies of every single treatment
+   - `\(\Rightarrow\)` .red[**identifiability** constraints] needed
+
+
+--
+
+
+- Assume .red[same] random effects .red[variance] for each treatment comparison
+   - `\(\sigma_{st}^2 = \sigma^2\)`
+   - unless expect differing amounts of heterogeneity for different treatment effects (&lt;svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  &lt;g label="icon" id="layer6" groupmode="layer"&gt;    &lt;path id="path2" d="M 120.19265,177.73779 C 123.18778,77.35076 64.277527,63.999998 64.277527,63.999998 v 31.26245 C 40.834519,83.611374 18.32863,81.929634 18.32863,81.929634 V 337.10903 c 0,0 98.10414,-11.41744 98.10414,84.40952 0,0 36.58424,-153.37442 248.86103,26.48145 0,-61.59342 0.37757,-216.93925 0.37757,-268.28471 C 169.9561,37.131382 120.1931,177.73779 120.1931,177.73779 Z m 187.20631,173.82056 -12.37599,-97.65441 h -0.448 l -40.72819,97.65441 h -17.55994 l -38.9362,-97.65441 h -0.448 l -14.17589,97.65441 h -43.87514 l 28.8015,-169.61925 h 43.42716 l 34.43518,90.6496 36.46566,-90.6496 h 43.87513 l 25.6817,169.61925 h -44.13938 z" style="stroke-width:0.0675239"&gt;&lt;/path&gt;  &lt;/g&gt;&lt;/svg&gt; [Lu and Ades, 2004](https://pubmed.ncbi.nlm.nih.gov/15449338/) and &lt;svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"&gt;&lt;/path&gt;&lt;/svg&gt; [Lu and Ades, 2006](https://www.tandfonline.com/doi/abs/10.1198/016214505000001302))
+
+
+--
+
+
+.red[Prior for] `\(\class{red}{\sigma^2}\)`: Uniform from 0 to a large upper limit (eg 10 if on the log scale) is often used, especially to align with standard meta-analysis
+ 
+- **But**: Beware of sensitivity to this &amp;ndash; particularly if only few studies are considered...
+
+---
+
+# Results
+
+## Random effects models
+
+.pull-left[
+- Wider CIs after accounting for heterogeneity
+
+- C/B: compromise between direct and indirect evidence
+
+- D/A: smallest trials, still a lot of uncertainty
+]
+.pull-right[
+
+
+&lt;span style="display:block; margin-top: -20px ;"&gt;&lt;/span&gt;
+&lt;center&gt;&lt;img src=./img/unnamed-chunk-9-1.png width='90%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+]
+
+---
+
+# Use in cost-effectiveness analysis
+
+## Example
+
+External data on Expected Life-Years Gained if quit smoking:
+
+- around 15 years (sd `\(\approx\)` 4): model as `\(L\sim \dnorm(\style{font-family:inherit;}{\text{mean}} =15,\style{font-family:inherit;}{\text{sd}}=4)\)`
+
+- and code this as `L ~ dnorm(15, 0.0625)` in `BUGS`
+
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+
+
+--
+
+
+Model `\(L\)` by Prob(quit) to get E[LYG] under each intervention
+
+&lt;center&gt;&lt;img src=./img/tab1.png width='75%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+
+and compare to cost of each intervention:
+
+&lt;center&gt;&lt;img src=./img/tab2.png width='70%' title='INCLUDE TEXT HERE'&gt;&lt;/center&gt;
+
+---
+
+# Further issues...
+
+- Different type of outcomes
+
+   - Binary data (Binomial models, as here)
+   - Counts of events/person-years at risk (Poisson models)
+   - Mean + sd of continuous outcomes (Normal models)
+
+   ... in each arm of the study
+
+- Individual patient data alongside data aggregated by arms
+
+- Meta-regression: explain heterogeneity between studies using study-level characteristics as covariates
+
+- Detecting / handling conflicts between direct / indirect evidence
+
+
+
+--
+
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+.content-box-beamer[
+### Further tools
+
+&lt;svg viewBox="0 0 581 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"&gt;&lt;/path&gt;&lt;/svg&gt; [GetMTC](http://drugis.org/software/r-packages/gemtc)
+
+&lt;svg viewBox="0 0 581 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"&gt;&lt;/path&gt;&lt;/svg&gt; [nmaINLA](https://cran.r-project.org/web/packages/nmaINLA/vignettes/nmaINLA.pdf)
+
+&lt;svg viewBox="0 0 581 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M581 226.6C581 119.1 450.9 32 290.5 32S0 119.1 0 226.6C0 322.4 103.3 402 239.4 418.1V480h99.1v-61.5c24.3-2.7 47.6-7.4 69.4-13.9L448 480h112l-67.4-113.7c54.5-35.4 88.4-84.9 88.4-139.7zm-466.8 14.5c0-73.5 98.9-133 220.8-133s211.9 40.7 211.9 133c0 50.1-26.5 85-70.3 106.4-2.4-1.6-4.7-2.9-6.4-3.7-10.2-5.2-27.8-10.5-27.8-10.5s86.6-6.4 86.6-92.7-90.6-87.9-90.6-87.9h-199V361c-74.1-21.5-125.2-67.1-125.2-119.9zm225.1 38.3v-55.6c57.8 0 87.8-6.8 87.8 27.3 0 36.5-38.2 28.3-87.8 28.3zm-.9 72.5H365c10.8 0 18.9 11.7 24 19.2-16.1 1.9-33 2.8-50.6 2.9v-22.1z"&gt;&lt;/path&gt;&lt;/svg&gt; [multinma](https://dmphillippo.github.io/multinma/) &lt;svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"&gt;&lt;/path&gt;&lt;/svg&gt; [Slides](https://dmphillippo.github.io/ESMARConf2021_multinma)
+
+]
+
+
+&lt;span style="display:block; margin-top: 2em ;"&gt;&lt;/span&gt;
+
+.alignright[.small[&lt;svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="height:1em;fill:currentColor;position:relative;display:inline-block;top:.1em;"&gt;  [ comment ]  &lt;path d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm-28.9 143.6l75.5 72.4H120c-13.3 0-24 10.7-24 24v16c0 13.3 10.7 24 24 24h182.6l-75.5 72.4c-9.7 9.3-9.9 24.8-.4 34.3l11 10.9c9.4 9.4 24.6 9.4 33.9 0L404.3 273c9.4-9.4 9.4-24.6 0-33.9L271.6 106.3c-9.4-9.4-24.6-9.4-33.9 0l-11 10.9c-9.5 9.6-9.3 25.1.4 34.4z"&gt;&lt;/path&gt;&lt;/svg&gt; [Next lecture](../08_Survival/index.html)]]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url("../assets/ucl-stats/UCL-stats.png");
+  background-size: 14% 7%;
+  background-repeat: no-repeat;
+  position: absolute;
+  top:  2.625%; /* 2.65%em */
+  left: 85%;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)' +
+    ':not(.thankyou-michelle)' +
+    ':not(.thankyou-barney)' +
+    ':not(.end-of-course)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

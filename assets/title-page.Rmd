@@ -1,0 +1,98 @@
+class: title-slide
+
+# `r rmarkdown::metadata$title`
+
+## `r rmarkdown::metadata$author`
+
+### `r rmarkdown::metadata$institute`    
+
+.title-small[
+`r icons::icon_style(icons::fontawesome("envelope",style = "solid"),scale=.8,fill="#00acee")`  [g.baio@ucl.ac.uk](mailto:g.baio@ucl.ac.uk)
+`r icons::icon_style(icons::fontawesome("firefox"),scale=.8,fill="#EA7600")`  [https://gianluca.statistica.it/](https://gianluca.statistica.it/)
+`r icons::icon_style(icons::fontawesome("firefox"),scale=.8,fill="#EA7600")`  [https://egon.stats.ucl.ac.uk/research/statistics-health-economics/](https://egon.stats.ucl.ac.uk/research/statistics-health-economics/)
+`r icons::icon_style(icons::fontawesome("github"),scale=.8,fill="black")`  [https://github.com/giabaio](https://github.com/giabaio)
+`r icons::icon_style(icons::fontawesome("github"),scale=.8,fill="black")`  [https://github.com/StatisticsHealthEconomics](https://github.com/StatisticsHealthEconomics)
+`r icons::icon_style(icons::fontawesome("twitter"),scale=.8,fill="#00acee")`  [@gianlubaio](https://twitter.com/gianlubaio) &nbsp;&nbsp; `r icons::icon_style(icons::fontawesome("mastodon"),scale=.8,fill="#563acc")`  [@gianlubaio@mas.to](https://mas.to/@gianlubaio)      
+]
+
+<br> 
+
+### `r rmarkdown::metadata$params`
+
+<!--
+Adds a departmental logo on the right-bottom corner (Only with 'ucl-stats')
+-->
+.logo-stats[]
+
+<!--
+Can also add sticky notes:
+`r postit(text=paste0('Check out our departmental podcast "Random Talks" on Soundcloud!', add_podcast()),top="75%",left="2.5%",height="6.3em",width="6.3em")`
+
+`r postit(text=paste0("Follow our departmental social media accounts", add_twitter(url="https://twitter.com/stats_ucl",title="@stats_UCL",fill="#00acee"), add_linkedin(url="https://www.linkedin.com/in/statistical-science-ucl-906b9a201",title="LinkedIn")),top="53%",left="6.5%",height="6.3em",width="6.3em")`
+-->
+
+<!-- This adds a footer (optional and with other possibilities...) 
+     For example, can use `r samptux()` to add the Samp Tux log,
+     or change the bottom space to align the text, etc
+.footer-left[
+<span style="position: relative; bottom: 0px; color: #D5D5D5;"> &nbsp; &copy; Gianluca Baio (UCL)</span>
+]
+-->
+
+
+---
+
+layout: true
+
+.my-footer[ 
+.alignleft[
+&nbsp; &copy; Gianluca Baio (UCL) | `r add_mastodon()` `r add_twitter()` `r add_github()` `r add_email()` `r add_website()`
+]
+.aligncenter[
+.mydropdown[
+.mydropbtn[
+`r icons::icon_style(icons::fontawesome("chevron-circle-down",style = "solid"),scale=.8,fill="white")` 
+]
+.mydropdown-content[
+[1. Introduction](../01_Intro/index.html)
+[2. BUGS](../02_BUGS/index.html)
+[3. MCMC](../03_MCMC/index.html)
+[4. Intro HTA](../04_Intro_HE/index.html)
+[5. ILD](../05_ILD/index.html)
+[6. ALD](../06_ALD/index.html)
+[7. NMA](../07_NMA/index.html)
+[8. Survival](../08_Survival/index.html)
+[9. Markov models](../09_MM/index.html)
+[10. Missing data](../10_Missing/index.html)
+[11. VoI](../11_VoI/index.html) 
+]
+]
+`r rmarkdown::metadata$title` 
+]
+.alignright[
+`r course_site()` &nbsp; STAT0019 
+]
+] 
+
+<!-- Could also add a dropdown somewhere else in the slide 
+.dropdown[
+.dropbtn[
+Other lectures `r icons::icon_style(icons::fontawesome("chevron-circle-down",style = "solid"),scale=.8,fill="white")`
+]
+.dropdown-content[
+[Lecture 1](../01_Intro/)
+[Lecture 2](../02_BUGS/)
+[Lecture 3](../03_MCMC/)
+[Lecture 4](../04_Intro_HE/)
+[Lecture 5](../05_ILD/)
+[Lecture 6](../06_Survival/)
+[Lecture 7](../07_ALD/)
+[Lecture 8](../08_NMA/)
+[Lecture 9](../09_MM/)
+[Lecture 10](../10_Missing/)
+[Lecture 11](../11_VoI/)
+]
+]
+-->
+
+---

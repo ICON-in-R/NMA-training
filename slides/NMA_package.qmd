@@ -1,0 +1,43 @@
+---
+title: "NMA package"
+author: "Nathan Green"
+format:
+  revealjs:
+    incremental: true
+    theme: simple
+# format: pdf
+editor: visual
+---
+
+## What we've aleady covered
+
+We've seen
+
+-   A simple example for smoking cessation with binary data
+-   Fixed effect and random effect models
+-   How to write R and BUGS code to fit and explore these models
+
+
+## What next?
+
+-   Lots of the steps in preparing the data and inputs and writing the BUGS code are very similar between different projects and data sets
+-   But what if the data are in __different formats__?
+-   What if we want to repeat similar analyses __numerous times__?
+-   What if we have some new data that is similar but we would have to __hack__ at the R code to use it?
+-   It can be hard to figure out when theres a __bug__ in the code
+
+
+## NMA package
+
+-   Prewritten code is 'packaged up' in to a __convenient__ resource
+-   A __simple, intuitive interface__ makes running NMAs simple
+-   More functionality is available for __different input data formats__ (survival, binary, count)
+-   It can be __updated and modified__ according to user needs
+-   Analyses can be __automated__ and __batches__ of runs performed
+-   __Documented__ with help files and vignettes for how to use
+
+## Smoking cessation example again
+
+```r
+ffff
+```

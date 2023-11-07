@@ -1,0 +1,507 @@
+---
+title: "Practical: Network meta-analysis"
+subtitle: "SOLUTIONS"
+output: 
+  pdf_document
+format:
+  pdf
+links: 
+  - name: ""
+    icon: slideshare
+    icon_pack: fab
+    # url: /slides/07_NMA/index.html
+  - name: "PDF version"
+    # url: solutions6.pdf
+    icon: file-pdf
+    icon_pack: fas
+---
+
+<!-- ::: {.content-hidden when-format="pdf"} -->
+<!-- {{< include /practical/_info.qmd >}} -->
+<!-- ::: -->
+
+
+## Fixed effects NMA
+
+The data from the smoking cessation studies discussed in the lecture are
+included in the file [`smoke.Rdata`](smoke.Rdata) and can be loaded into the
+<tt>R</tt> workspace using the `load` command.
+```{r eval=FALSE}
+# Loads the data (assuming they are in the current folder)
+load("smoke.Rdata")
+```
+
+```{r echo=FALSE}
+load(here::here("practicals/BUGS/smoke.Rdata"))
+```
+
+We can also use other built-in <tt>R</tt> commands to
+inspect the object we have just loaded into our workspace to figure out
+what is stored in it, for example as in the following.
+```{r}
+# List the objects present in the workspace
+ls()
+
+# What type of object is 'smoke.list'?
+class(smoke.list)
+
+# What's in the data list?
+names(smoke.list)
+```
+
+The command `ls()` simply lists all the objects currently present in the
+workspace. In this case, we only have an object `smoke.list`, which has
+been created when using the `load` command above. We can check its
+"class" (in this case, unsurprisingly, a list) and show the names of the
+elements contained in it, using the command `names`.
+
+We can ask <tt>R</tt> to tell us more about these
+variables; for instance, we can inspect each variable's “class” (e.g.its nature) using the following helpful
+<tt>R</tt> command.
+```{r}
+lapply(smoke.list,class)
+```
+
+The <tt>R</tt> function `lapply` can be used to apply
+a function to the elements of a list (such as `smoke.list`). In this
+case, we want <tt>R</tt> to tell us what class each of
+the elements of `smoke.list` belongs to, which is what the command
+returns — for instance, the object `r` inside the object `smoke.list` is
+a matrix, while the object `NS` is an integer. We can also visualise
+each, e.g. by using the following commands
+```{r}
+# Shows the first few elements of the object r included inside the object smoke.list
+head(smoke.list$r)
+
+# Shows the first few elements of the object n included inside the object smoke.list
+head(smoke.list$n)
+```
+
+More in details, the elements of `smoke.list` are:
+
+-   `NS`: the total number of studies included in our analysis (24);
+
+-   `NT`: the total number of interventions considered (4);
+
+-   `na`: a vector containing the number of arms included in each of the
+    studies;
+
+-   `r`: a matrix with `NS` rows and `NT` columns, containing the number
+    of subjects that in each study and under each treatment arms have
+    been observed to quit smoking;
+
+-   `n`: a matrix with `NS` rows and `NT` columns, containing the total
+    number of subjects observed in each study and under each treatment
+    arms;
+
+-   `t`: a matrix with `NS` rows and 3 columns, identifying the label
+    associated with the treatments included in each of the studies.
+    Notice that there are 3 columns because all studies have at most 3
+    treatment involved (i.e. all studies compare either 2 or 3
+    treatments --- cfr. the lecture slides). The treatments are labelled
+    as 1 = No intervention; 2 = Self-help; 3 = Individual counselling; 4
+    = Group counselling.
+
+Notice that some of the data will be associated with `NA` (i.e. "Not
+Available" or "missing"). In this case, these are not really ["missing
+data"](/slides/10_Missing/), but rather indicate that that particular column is not relevant.
+For example, in study 1 there are only two arms (you can confirm this by
+asking <tt>R</tt> to tell what `na[1]` is). The matrix
+`r` has values 79 and 77 in the first two columns and then `NA` in the
+third and fourth column — this is because study 1 only had data on arm 1
+and arm 2. Incidentally, you can check what these arms where by looking
+at the value of the first row in the matrix `t`
+```{r}
+smoke.list$t[1,]
+```
+which tells you that the first arm was treatment 1, the second arm was
+treatment 2 and the third arm was nothing.
+
+You can do a similar check on row (i.e. study) 4, using the following
+commands.
+```{r}
+# How many arms were used in study 4?
+smoke.list$na[4]
+
+# What treatment arms were they?
+smoke.list$t[4,]
+
+# Data on the number of subjects quitting smoke for study 4
+smoke.list$r[4,]
+
+# Data on the total sample size in study 4
+smoke.list$n[4,]
+```
+
+As we can see, study 4 considered 2 arms (comparing interventions 1 and 3, i.e. No intervention vs Individual counselling) and the number of quitters out of the total number of subjects studied were `r smoke.list$r[4,1]`/`r smoke.list$n[4,1]` and `r smoke.list$r[4,3]`/`r smoke.list$n[4,3]`, respectively
+
+Now we are ready to prepare to run the model. First, we consider the
+"fixed-effect" specification, whose model code is included in the file
+[`smokefix_model.txt`](smokefix_model.txt). One of the complications of this model code is in
+the use of the ["nested index"](/slides/06_NMA/#nested-index) notation. For example, the code
+```{r model_FE1,include=TRUE,eval=FALSE,echo=TRUE}
+for(s in 1:NS) { # loop over studies
+      for (a in 1:na[s])  { # loop over arms
+         r[s,t[s,a]] ~ dbin(p[s,t[s,a]], n[s,t[s,a]])
+         ...
+```
+can be interpreted in this way. Let us consider `s` = 1, i.e. the first
+study in our dataset. This consists of `na[1]` = 2 arms, which means we
+will have two observed data points in terms of number of subjects who
+quit smoking. This also means that the index `a` will run from 1 to
+`na[s]` = `na[1]` = 2. Moreover, `t[s,a]` is in this case `t[1,1]` = 1
+and `t[s,a]` = `t[1,2]` = 2, which in turns means that the above code
+effectively means that we are using the following modelling assumptions.
+```{r model_FE2,include=TRUE,eval=FALSE,echo=TRUE}
+r[1,1] ~ dbin(p[1,1], n[1,1])
+r[1,2] ~ dbin(p[1,2], n[1,2])
+```
+
+The use of the nested index notation is a clever shortcut for the full
+specification of all the cases (for all the studies and for all arms
+specified in each study) and it is particularly helpful for
+“non-rectangular” data (i.e. when not all the rows have data on the same
+number of columns).
+
+From a more substantial point of view, we are modelling the logit of the
+study- and arm-specific probability of quitting smoking using a linear
+term made by an overall study-specific mean (`mu[s]`) and an incremental
+term (`delta[s,t[s,a]]`), which accounts for the "treatment effect".
+```{r model_FE3,include=TRUE,eval=FALSE,echo=TRUE}
+logit(p[s,t[s,a]]) <- mu[s] + delta[s,t[s,a]]
+```
+
+Again, we are using the nested index notation in exactly the same way as
+above. In addition, what characterises this model as a "fixed-effect"
+specification is the distributional assumption on the incremental
+effects `delta`. These are modelled as follows.
+```{r model_FE4,include=TRUE,eval=FALSE,echo=TRUE}
+## log odds ratio compared to treatment in arm 1 of study s
+delta[s,t[s,1]] <- 0
+for (a in 2:na[s])  {
+   delta[s,t[s,a]] <- d[t[s,a]] - d[t[s,1]]
+}
+```
+
+Firstly, we set the "baseline" intervention for each study `s`. In
+particular, we arbitrarily assume that the first intervention
+(associated with the index identified by `t[s,1]`) is the reference one
+for study `s` and as such, we (again, arbitrarily) assign it an “extra”
+effect of 0. Obviously, this means that for the reference treatment, the
+study- and arm-specific probability of quitting smoking is simply
+`mu[s]`, because in that case we would be adding to the linear predictor
+a value for the corresponding `delta` equal to 0. Any other intervention
+(from 2 to `na[s]`) is modelled through the difference between its
+specific value `d[t[s,a]]` and the value associated with the
+study-specific reference intervention, `d[t[s,1]]`.
+
+Let us make a specific example: consider for example study `s` = 21. The
+details are as below.
+```{r}
+# How many arms?
+smoke.list$na[21]
+
+# Which arms?
+smoke.list$t[21,]
+
+```
+
+This means that this study compares interventions 2, 3 and 4 (Self-help,
+Individual and Group counselling) and that, arbitrarily, we assume that
+the one in the first column of `t[21,]` is the reference — in this case,
+that is Self-help. In line with the code above, we then set
+```{r model_FE5,include=TRUE,eval=FALSE,echo=TRUE}
+delta[21,2] <- 0
+delta[21,3] <- d[21,3] - d[21,2]
+delta[21,4] <- d[21,4] - d[21,2]
+```
+because `t[21,1]` = 2, `t[21,2]` = 3 and `t[21,3]` = 4 (cfr. with the
+code above describing the general definition of the variables
+`delta[s,t[s,a]]`). Again, the nested index notation allows us to use a
+single double loop to model all the possible cases.
+
+The log ORs `d` are then defined as follows.
+```{r model_FE6,include=TRUE,eval=FALSE,echo=TRUE}
+d[1] <- 0  # log odds ratio compared to treatment 1 (e.g. placebo)
+for (i in 2:NT) {
+    d[i] ~ dnorm(0, 0.0001)
+}
+```
+
+This again sets one reference category, which in this case is associated
+with intervention 1 (No intervention), by setting the corresponding log
+OR to 0. Then we assign a vague prior to all the other log ORs (the
+interventions labelled from 2 to `NT` = 4), using a Normal with mean
+equal to 0 and a very small precision.
+
+The next bit of the model code constructs the ORs for all potential
+treatment comparisons.
+```{r model_FE7,include=TRUE,eval=FALSE,echo=TRUE}
+## odds ratios for all treatment comparisons
+for (c in 1:(NT-1)) {
+  for (k in (c+1):NT)  {
+    or[c,k] <- exp(d[c] - d[k])
+    or[k,c] <- 1/or[c,k]
+  }
+}
+```
+
+Again, there is some clever coding to use loops and compactly write down
+*all* the possible pairwise comparisons. Notice that the variables `d`
+define the log ORs and thus in order to obtain the OR on the natural
+scale, we need to exponentiate the difference between any two values.
+The line `or[k,c] <- 1/or[c,k]` uses the fact that ORs for the
+comparison between two generic interventions $k$ and $c$ are simply the
+reciprocal of the ORs for the comparison between $c$ and $k$.
+
+Finally, the model code has some additional definitions for other useful
+variables.
+```{r model_FE8,include=TRUE,eval=FALSE,echo=TRUE}
+## Log odds of quitting successfully under no intervention (from published data)
+alpha ~ dnorm(-2.6, 6.925208) # = SD 0.38
+## Absolute probability of quitting successfully under each intervention
+for (i in 1:NT) {
+    logit(pq[i]) <- alpha + d[i]
+}
+
+## Life years gained by quitting
+L ~ dnorm(15, 0.0625) # SD=4
+```
+
+Firstly, we define a model for the absolute probability of quitting
+smoking under each intervention. We do on the logit scale, by defining
+the baseline value $\alpha \sim \mbox{Normal}(\mu_\alpha,\sigma_\alpha)$, to which we add
+the incremental effect of each treatment. Notice that because we set
+`d[1]` = 0, then `alpha` is equal to `logit(pq[1])`, which is the
+absolute “success rate” for No intervention. This is incremented by the
+value of the log OR for each active treatment (against the reference,
+i.e. No intervention). Notice also that we use an informative prior
+distribution to model the parameter $\alpha$. We have information
+suggesting that a random smoker who is not undergoing any active
+treatment has an average chance of quitting smoking of about 7%, ranging
+between around 2% to 13.8%. We can map this information into a suitable
+prior on the logit scale by setting
+$$\mu_\alpha = \mbox{logit}(0.07) = \log\left(\frac{0.07}{1-0.07}\right) = \log\left(\frac{0.07}{0.93}\right) \approx -2.6.$$
+We can also use the fact that
+$$\sigma_\alpha \approx \frac{\mbox{logit}(0.138)-\mbox{logit}(0.07)}{1.96} \approx 0.38$$
+— this is reasonable if we assume some sort of symmetry in the interval
+estimate, whereby the upper extreme is 1.96 standard deviations away
+from the central point, which implies that
+$$\mbox{logit}(0.07)+ 1.96\sigma_\alpha \approx \mbox{logit}(0.138).$$
+Of course, we need to include in the
+<tt>OpenBUGS</tt> model the precision,
+i.e. $1/(0.38)^2=6.925208$.
+
+The model for the life years gained by quitting smoking is constructed
+in a similar way: our best estimate is a gain of between 7 and 22 extra
+years, with an average of 15, which we turn into a Normal distribution
+with mean 15 and standard deviation of 4 (i.e. precision of
+$1/16=0.0625$).
+
+The model is then run from <tt>R</tt>.
+```{r runBUGS1,cache=TRUE}
+library(R2OpenBUGS)
+
+### Initial values
+inits <- list(list(mu=rep(0,24), d=c(NA,0,0,0)),
+              list(mu=rep(-1,24), d=c(NA,1,1,1)))
+
+### Pilot run with no burn-in, to illustrate convergence using traceplots
+res0 <- bugs(model=here::here("practicals/BUGS/smokefix_model.txt"),
+             data=smoke.list,
+             inits=inits,
+             parameters=c("d"),
+             n.chains=2,
+             n.burnin=0,
+             n.iter=10000)
+```
+
+Here, we first define the initial values creating a suitable list made
+by two “sub-lists” — this implies we are prepared to run the model using
+two parallel chains. We initialise the variables `mu` and `d` — notice
+that because the first element of the vector `d` is in fact fixed at 0,
+we cannot initialise it. We overcome this issue by creating a vector of
+initial values, the first of which is set to `NA`.
+
+In addition, this time we run the model with no burn-in, to explore
+convergence in more details than we’ve done so far. The code below uses
+the results of the <tt>OpenBUGS</tt> model as stored
+in the <tt>R</tt> object `res0` to produce traceplots
+for the only variable monitored (the vector `d`). Notice in particular
+that we can use the object `res$sims.array`, which (as the name
+suggests) is an array of dimension `Number of iterations stored`
+$\times$ `Number of chains run` $\times$
+`Number of parameters monitored`. In this case, the number of parameters
+is equal to 4, because there are 3 "active" elements in `d` (since
+`d[1]` is set to 0 and thus is not technically a random variable, in
+<tt>OpenBUGS</tt>), plus the model deviance, which
+<tt>OpenBUGS</tt> computes by default. You can check
+this by simply printing the summary statistics for your model.
+
+```{r showres,echo=TRUE,fig.align='center',error=FALSE,out.width='1.9\\textwidth',include=TRUE,comment=NA}
+library(R2OpenBUGS)
+
+print(res0,digits=3)
+```
+
+The actual traceplot is produce using the built-in functions `plot` and
+`points` as below.
+
+```{r traceplots1,echo=TRUE, fig.align='center',error=FALSE, fig.width=7,fig.height=7,include=TRUE,comment=NA}
+# Splits the graphical output into a 2-by-2 panel (side-by-side graphs)
+par(mfrow=c(2,2))
+# First graph
+plot(res0$sims.array[,1,1],t="l",xlab="Iterations",ylab="d[2]",col="blue")
+points(res0$sims.array[,2,1],t="l",col="red")
+# Second graph
+plot(res0$sims.array[,1,2],t="l",xlab="Iterations",ylab="d[3]",col="blue")
+points(res0$sims.array[,2,2],t="l",col="red")
+# Third graph
+plot(res0$sims.array[,1,3],t="l",xlab="Iterations",ylab="d[4]",col="blue")
+points(res0$sims.array[,2,3],t="l",col="red")
+```
+
+As is possible to see, for all the three important parameters,
+convergence does not seem an issue and in fact the two chains seem to
+mix up almost immediately, despite being seen to start from rather
+different points (cfr. the red and blue lines). Notice that this
+strategy is not an absolute requirement! We can monitor all the relevant
+parameters and run the model for a large number of iterations in the
+first place. But, especially when there are many parameters, this course
+of action may be beneficial, because we are not stuck waiting for
+<tt>OpenBUGS</tt> to finish the simulations for a long
+time, before we can even assess how the model is working in terms of
+convergence.
+
+At this point, we can monitor all the model parameters (including `L`
+and `pq`) and re-run the model to produce the relevant estimates.
+
+```{r runBUGS2, cache=TRUE, comment=NA}
+res <- bugs(model= here::here("practicals/BUGS/smokefix_model.txt"),
+            data=smoke.list,
+            inits=inits,
+            parameters=c("d","L","pq"),
+            n.chains=2,
+            n.burnin=1000,
+            n.iter=5000)
+
+# Show summary statistics
+print(res,digits=3)
+```
+
+Again, convergence is clearly reached (cfr. `Rhat` and `n.eff`). We
+could proceed with further analyses as well as with building the
+cost-effectiveness model, but we defer this to after we’ve run the
+random effects model (cfr. lecture slides for evidence of heterogeneity
+in individual studies; we can replicate the analysis monitoring the
+nodes `delta`, which are the study- and treatment-specific log ORs).
+
+## Random effects NMA
+
+The model code is fairly similar to the one discussed above for the
+fixed effects NMA. The only difference, really, is in how the study- and
+treatment-specific log ORs `delta` are modelled. In this case, we
+consider a simple specification, characterised by the following code
+lines.
+
+```{r model_RE1,include=TRUE,eval=FALSE,echo=TRUE}
+delta[s,t[s,a]] ~ dnorm(md[s,t[s,a]],taud[s,t[s,a]])
+
+# random effects means
+md[s,t[s,a]] <- d[t[s,a]] - d[t[s,1]]
+
+## random effects 1/variance constrained to be the same for every comparison
+taud[s,t[s,a]] <- tau
+
+# model for the standard deviation of the random effects
+sd ~ dunif(0, 10)
+# rescaling to the precision
+tau <- 1/pow(sd, 2)
+```
+--- notice that we can include more complexity, for instance by modelling
+the precision as dependent on the studies or the treatments, as well as
+by considering a more structured model accounting for correlation within
+trials with 3 arms or more (but we do not do this here!).
+
+The model is run again using the following code.
+
+```{r runBUGS3,cache=TRUE,comment=NA}
+res2 <- bugs(model=here::here("practicals/BUGS/smokere_model.txt"),
+             data=smoke.list,
+             inits=inits,
+             parameters=c("d", "sd", "pq", "L"),
+             n.chains=2,
+             n.burnin=1000,
+             n.iter=20000)
+
+print(res2,digits=3)
+```
+
+Again, the model seems to do well in terms of convergence, although
+autocorrelation is possibly more of a concern (check the values of
+`n.eff`, which are slightly smaller than the nominal sample size of
+38000). This is not uncommon with hierarchical/random effect models.
+
+In terms of comparison with the results of the fixed effects version,
+there is generally an increase in the value of the mean for the log ORs
+`d`, coupled with larger uncertainty. On the other hand, the absolute
+probabilities of quitting `pq` are rather stable. The estimate for `L`
+does not change --- but this is not surprising, as this node is modelled
+independently on the other variables in the code and based on an
+informative prior, which is not updated by any data. So, simply changing
+parts of the model that are effectively disconnected by the one in which
+we model `L` is not changing our estimates for this node.
+
+We can also complete the model to include the cost-effectiveness
+component. We do this by firstly defining a vector of unit costs
+associated with each intervention. Here we assume that No intervention
+does not involve any cost for the public payer, while Self-help,
+Individual and Group counselling do have some costs. We then define the
+measures of effectiveness as the overall life years gained (`L`)
+weighted by the absolute probability of quitting smoking (`pq`) for each
+intervention. We build the variables `e` and `c` in the loop over the 4
+interventions. Notably, in this case, we do not model the costs
+(although a variant of this model that does account for this is
+presented in the the [BCEA Book](https://gianluca.statistica.it/book/bcea/)).
+
+```{r BCEA-prep}
+#| message: false
+#| warning: false
+#| 
+### Cost-effectiveness analysis
+library(BCEA)
+
+unit.cost <- c(0,200,6000,600)
+ints <- c("No contact","Self help","Individual counselling","Group counselling")
+e <- c <- matrix(NA,res2$n.sims,4)
+
+# MCMC sample from distribution of life-years gained by quitting
+L <- res2$sims.list$L 
+
+# ...and from distributions of probability of quitting for each of 4 interventions
+pq <- res2$sims.list$pq 
+
+for (t in 1:4) {
+    e[,t] <- L*pq[,t]
+    c[,t] <- unit.cost[t]
+}
+colnames(e) <- colnames(c) <- ints
+```
+
+Finally, we can run `BCEA` to post-process the model output and produce
+the relevant summaries, e.g. summaries or the cost-effectiveness plane.
+
+```{r BCEA_run, echo=TRUE, cache=TRUE}
+m <- bcea(e, c, interventions=ints, Kmax=1000, ref=4)
+summary(m)
+```
+
+Notice that, because this model involves multiple comparisons, the
+default output for the `plot` function in `BCEA` is not entirely
+satisfactory. There are ways in which we can modify this default
+behaviour to improve the look of the pictures (see the help for `BCEA`
+as well as the [BCEA Book](https://gianluca.statistica.it/book/bcea/)).
+
+```{r BCEA_plot, error=FALSE,include=TRUE,comment=NA,echo=TRUE}
+plot(m)
+```
