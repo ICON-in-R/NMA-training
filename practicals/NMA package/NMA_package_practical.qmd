@@ -12,19 +12,19 @@ In this practical we repeat the analysis from the previous practical but using t
 
 Obtain `NMA` from GitHub using the following.
 
-```{r}
-remotes::install_github("ICON-in-R/NMA")
+```{r warning=FALSE, message=FALSE}
+if (!require(NMA)) remotes::install_github("ICON-in-R/NMA")
 ```
 
 ## Data preparation
 
-Firstly, load the study data in to the workspace.
+Firstly, load the study data in to the workspace from the `NMA-tutorial` project.
 
 ```{R}
 load(here::here("practicals","BUGS","smoke.Rdata"))
 ```
 
-The original data looks like this
+The original data are in an R `list` format and look like this
 
 ```{r}
 smoke.list
@@ -44,21 +44,23 @@ We do this for both number of counts ($r$) and sample size ($n$).
 library(dplyr)
 library(reshape2)
 
-r_data <- melt(smoke.list$r) |>
-  `names<-`(c("study", "treatment", "r")) |>
+r_data <- melt(smoke.list$r) |>               # rearrange to 'long' format
+  `names<-`(c("study", "treatment", "r")) |>  # rename columns
   na.omit()
 
 n_data <- melt(smoke.list$n) |>
   `names<-`(c("study", "treatment", "n")) |>
   na.omit()
+
+head(r_data)
 ```
 
 The last thing to do is combine these two arrays into a single object. We can simply append one to another or a more elegant and robust way is to *join* them. This will ensure that the correct rows are match up between arrays. The command to do this in base R is `merge()`. We just rearrange the columns in to a nice order at the end.
 
 ```{r}
 data <- merge(r_data, n_data,
-              by = c("study", "treatment")) |> 
-  arrange(study)
+              by = c("study", "treatment")) |>  # which columns to match
+  arrange(study)                                # ascending order
 
 head(data)
 ```
@@ -92,7 +94,7 @@ nma_model <-
           is_random = RANDOM,
           data_type = data_type,
           refTx = REFTX,
-          effectParam = "d",
+          effectParam = "d",  # which parameters to 'monitor' i.e. record
           label = "",
           endpoint = "")
 
@@ -107,3 +109,8 @@ nma_res
 ```
 
 -   `totresdev` is the total residual deviance
+
+```{r eval=FALSE, echo=FALSE}
+# extract R code
+knitr::purl("practicals/NMA package/NMA_package_practical.qmd", documentation = 2)
+```
