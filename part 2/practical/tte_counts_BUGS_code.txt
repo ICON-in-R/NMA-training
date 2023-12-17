@@ -1,0 +1,44 @@
+# BUGS NMA code
+# based on code from:
+# https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/1471-2288-14-105#additional-information
+
+model { 
+  ### Part 1: Model for IPD
+  
+  for(i in 1:n.subjects) {
+    # Weibull likelihood for IPD
+    t.obs[i] ~ dexp(zu[i])I(t.cens[i], )
+    
+    # Model for IPD
+    log(zu[i]) <- mu + d[treat[i]] - d[baseline[i]]
+  }
+  
+  # Vague prior for IPD
+  mu ~ dnorm(0, 1.0E-6)
+  
+  ### Part 2: Model for aggregate data
+  
+  for (i in 1:n.agg.arms) {
+    # Binomial likelihood for AD
+    r[i] ~ dbin(pa[i], n[i])
+    
+    # Model for AD
+    pa[i] <- 1 - exp(-zu.a[i] * a.time[i])
+    log(zu.a[i]) <- mu.a[a.id[i]] + d[a.treat[i]] - d[a.base[i]]
+  }
+  
+  # Vague priors for AD
+  for(j in 1:n.agg.trials) {
+    mu.a[j] ~ dnorm(0, 1.0E-6)
+  }
+  
+  ### Model for combining all estimates of treatment effect
+  
+  # Vague prior for basic parameters
+  d[1] <- 0
+  
+  for (k in 2:n.treat) {
+    d[k] ~ dnorm(0, 1.0E-6)
+  }
+}
+

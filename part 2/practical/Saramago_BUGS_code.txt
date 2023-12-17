@@ -1,0 +1,73 @@
+# BUGS code
+# https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/1471-2288-14-105#additional-information
+
+model { 
+  ### Part 1: Model for IPD 1 and IPD 2###
+  for(i in 1:n.subjects1) {
+    #Weibull likelihood for IPD 1	
+    t.obs1[i] ~ dweib(shape,zu1[i])I(t.cen1[i], )	
+    #Model for IPD 1
+    log(zu1[i]) <- mu1 + betac1[centre1[i]] + d[treat1[i]] - d[baseline1[i]] + beta0_cov * cov1[i]
+    cov1[i] ~ dnorm(m1,p1)
+  }
+  
+  #Vague priors for IPD 1
+  mu1 ~ dnorm(0, 1.0E-6)
+  m1 ~ dnorm(0, 1.0E-6)
+  p1 ~ dgamma(0.01, 1.0E-3)
+  for (i in 1:C1) {
+    betac1[i] ~ dnorm(0.0, taua)
+  }
+  
+  for(k in 1:n.subjects2) {
+    #Weibull likelihood for IPD 2	
+    t.obs2[k] ~ dweib(shape, zu2[k])I(t.cen2[k], )
+    
+    #Model for IPD 2
+    log(zu2[k]) <- mu2 + betac2[centre2[k]] + d[treat2[k]] - d[baseline2[k]] + beta0_cov * cov2[i]
+    cov2[i] ~ dnorm(m2,p2)
+  }
+  
+  #Vague priors for IPD 2
+  mu2 ~ dnorm(0,1.0E-6)
+  m2 ~ dnorm(0,1.0E-6)
+  p2 ~ dgamma(0.01, 1.0E-3)
+  
+  for (i in 1:C2) {
+    betac2[i] ~ dnorm(0.0,taua)
+  }
+  
+  #Vague priors for baseline patient characteristics effects
+  beta0_cov ~ dnorm(0,1.0E-6)
+  
+  # Part 2: Model for aggregate data #
+  for(i in 1:n.agg.arm) {
+    #Binomial likelihood for AD
+    r[i] ~ dbin(pa[i],n[i])
+    #Model for AD
+    pa[i] <- 1 - exp( - zu.a[i] * pow(a.time[i], shape))
+    log(zu.a[i]) <- mu.a[a.s[i]] + d[a.treat[i]] - d[a.base[i]]
+  }
+  
+  #Vague priors for AD
+  for(j in 1:n.agg.trials) {
+    mu.a[j] ~ dnorm(0,1.0E-6)
+  }
+  
+  ### Model for combining all estimates of treatment effect  #
+  #Vague prior for shape parameter
+  shape ~ dgamma(0.01, 1.0E-3)
+  
+  #Vague priors for shared centre effect
+  betac.new ~ dnorm(0.0,taua)
+  taua ~ dgamma(0.01, 1.0E-3)
+  
+  #Vague prior for basic parameters
+  d[1] <- 0
+  
+  for (k in 2:treat) {
+    d[k] ~ dnorm(0,1.0E-6)
+  }
+  
+}
+
