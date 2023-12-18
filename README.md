@@ -18,7 +18,7 @@ This is an introductory session followed by a more advanced session.
 * Extending the binary data model
 * Survival analysis type data and binary data
   * Time to event (TTE)
-  * Contrast-based summaries: hazard ratios
+  * Contrast-based summaries on the hazard scale
     
 ### Structure
 
