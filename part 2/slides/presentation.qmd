@@ -1,0 +1,390 @@
+---
+title: "Network meta-analysis using survival data"
+author: "Nathan Green"
+institute: Department of Statistic Science | University College London
+format:
+  revealjs:
+    slide-number: true
+    progress: true
+    controls: true
+    theme: simple
+    fontsize: 1.8em
+    margin: 0.07
+    height: 900
+    footer: "NMA with survival data | Nathan Green (UCL)"
+# format: beamer
+---
+
+## Summary
+
+* Recap part one
+  * Basic NMA with binary data
+  
+* NMA with survival data
+  * IPD time to event
+  * Contrast-based data hazard ratios (HR)
+
+* BUGS with R practical
+
+::: {.callout-note icon=false}
+
+## References
+
+1. __Saramago P, Chuang LH, Soares MO__. _Network meta-analysis of (individual patient) time to event data alongside (aggregate) count data_. BMC Med Res Methodol. 2014;14(1). 
+
+2. __Woods BS, Hawkins N, Scott DA__. _Network meta-analysis on the log-hazard scale, combining count and hazard ratio statistics accounting for multi-arm trials: A tutorial_. BMC Med Res Methodol. 2010;10. 
+:::
+
+## Recap of part 1
+
+* Unusual for a policy question to be informed by a single study
+  * Must use all available and relevant evidence
+
+::: {.incremental}
+- New treatment C: been trialled against old treatment B, but not to A
+
+- For health economic evaluation need to compare A/B/C together
+
+- Learn about C/A effect from C/B and B/A trial data
+
+- Also called "mixed treatment comparisons". Since can also “mix” direct and indirect data on same comparison...
+:::
+
+## Count data equations
+
+::: {.callout-note icon=false}
+
+## Fixed effects
+
+$$
+r_{st} \sim Bin(p_{st}, n_{st})\\
+logit(p_{st}) = \mu_s + \delta_{st}\\
+\delta_{st} \sim d_t - d_{t_{s0}}
+$$
+
+:::
+
+::: {.callout-note icon=false}
+
+## Random effects
+
+$$
+r_{st} \sim Bin(p_{st}, n_{st})\\
+logit(p_{st}) = \mu_s + \delta_{st}\\
+\delta_{st} \sim N(\mu^{\delta}_{st}, \sigma^2_{st})\\
+\mu^{\delta}_{st} \sim d_t - d_{t_{s0}}
+$$
+
+:::
+
+
+## More realistic situation
+
+* Different types of data we want to synthesise.
+
+## Binary data with time to event data (TTE)
+
+* Use example from Saramago (2014)^[__Saramago P, Chuang LH, Soares MO__. _Network meta-analysis of (individual patient) time to event data alongside (aggregate) count data_. BMC Med Res Methodol. 2014;14(1).]
+
+. . .
+
+* The case study relates to compression systems aiming to deliver high compression to promote venous leg ulcer healing
+
+. . .
+
+* The final NMA contained data from 16 RCTs
+  * 2 included RCTs had full IPD data  (841 participants) which included time to healing or censoring for each participant, together with other characteristics (treatment centre, ulcer duration, size,  patient mobility).
+  * Remaining aggregate data only
+  
+
+::: aside
+
+:::
+
+## Data
+
+![](paper-table.png){width=300, fig-align="centre"}
+
+## Network diagram
+
+![](paper-network-diagram.png){fig-align="centre"}
+
+## IPD model
+
+* $i$th participant in $j$th study in $k$th treatment arm
+
+$$
+t_{ijk} \sim Weibull(s, \lambda_{ijk}) I(t^c_{ijk})
+$$
+
+
+$$
+\log(\lambda_{ijk}) = 
+\begin{cases}
+    \mu_j^{IPD} + \gamma_j^c + \beta_{0j}x_{ijk}, & \text{if } k=b\\
+    \mu_j^{IPD} + d_{bk} + \gamma_j^c + \beta_{0j}x_{ijk}, & \text{if } k \gt b
+\end{cases}
+$$
+
+
+$$
+x_{ijk} \sim N(m,p) \;\;\; \gamma^c_j \sim N(0, \pi)
+$$
+
+## AD model
+
+* The linear predictor, $\log(\lambda^{AD}_{jk})$ was a function of the baseline log-hazard of an event for treatment $b$ in study $j$, $\mu^{AD}_{jb}$, and by the log-hazard ratio for treatment $k$ and baseline treatment $b$, $d_{bk}$ (= $d_{1k} − d_{1b}$).
+Note that there are parameters common to both model parts, namely the log-hazard ratios and the shape parameter of the time to healing distribution.
+
+$$
+r_{jk} \sim Bin(p_{jk}, n_{nk})
+$$
+
+$$
+p_{jk} = 1 - \exp(- \lambda_{jk}^{AD} {(t^{AD}_{jk})}^s)
+$$
+
+$$
+\log(\lambda_{jk}^{AD}) =
+\begin{cases}
+    \mu_j^{AD}, & \text{if } k=b\\
+    \mu_j^{AD} + d_{bk}, & \text{if } k \gt b
+\end{cases}
+$$
+
+## Data format
+
+-   `treat`: treatment arm (coded 1,2)
+
+-   `baseline`: reference treatment code, 
+
+-   `t.obs`: time to event in months (under censoring)
+
+-   `t.cens`: time of censoring in months,
+
+-   `n.subjects`: Number of participants in IPD
+
+-   `n.treat`: Number of treatments
+
+-   `a.id` : study number
+
+-   `a.treat` : treatment arm code (coded from 1 to number of treatments), 
+
+-   `r` : number of events in trial arm
+
+-   `n` : number of patients in trial arm
+
+-   `a.base` : reference treatment code
+
+-   `a.time` : follow-up time of trial
+
+-   `n.agg.trials` : Number of AD studies
+
+-   `n.agg.arms` : Number of AD study arms
+
+
+## Data format
+
+```{r}
+#| echo: true
+
+load(here::here("part 2/practical/tte_counts_input_data.RData"))
+
+input_dat
+```
+
+## Coding in BUGS
+
+* [Part 1]{style="color: red"}: Model for IPD
+
+```{r eval=FALSE, echo=TRUE}
+#| code-line-numbers: "|5-6|8-9|"
+
+model {
+  ### Part 1: Model for IPD
+  
+  for(i in 1:n.subjects) {
+    # Weibull likelihood for IPD
+    t.obs[i] ~ dexp(zu[i])I(t.cens[i], )
+    
+    # Model for IPD
+    log(zu[i]) <- mu + d[treat[i]] - d[baseline[i]]
+  }
+  
+  # Vague prior for IPD
+  mu ~ dnorm(0, 1.0E-6)
+```
+
+## Coding in BUGS
+
+* [Part 2]{style="color: red"}: Model for aggregate data
+
+```{r eval=FALSE, echo=TRUE}
+#| code-line-numbers: "|4-5|7-9|"
+
+  ### Part 2: Model for aggregate data
+  
+  for (i in 1:n.agg.arms) {
+    # Binomial likelihood for AD
+    r[i] ~ dbin(pa[i], n[i])
+    
+    # Model for AD
+    pa[i] <- 1 - exp(-zu.a[i] * a.time[i])
+    log(zu.a[i]) <- mu.a[a.id[i]] + d[a.treat[i]] - d[a.base[i]]
+  }
+  
+  # Vague priors for AD
+  for(j in 1:n.agg.trials) {
+    mu.a[j] ~ dnorm(0, 1.0E-6)
+  }
+```
+
+## Coding in BUGS
+
+* [Part 3]{style="color: red"}: Model for combining all estimates of treatment effect
+
+```{r eval=FALSE, echo=TRUE}
+  ### Model for combining all estimates of treatment effect
+  
+  # Vague prior for basic parameters
+  d[1] <- 0
+  
+  for (k in 2:n.treat) {
+    d[k] ~ dnorm(0, 1.0E-6)
+  }
+}
+```
+
+## Binary data with contrast-based survival data
+
+* Use example from Woods (2010)^[__Woods BS, Hawkins N, Scott DA__. _Network meta-analysis on the log-hazard scale, combining count and hazard ratio statistics accounting for multi-arm trials: A tutorial_. BMC Med Res Methodol. 2010;10. ]
+
+. . .
+
+* Data on survival endpoints are usually summarised using either _hazard ratio_, _cumulative number of events_, or _median_ survival statistics
+
+. . .
+
+* NMA of survival endpoints can combine count and hazard ratio statistics in a single analysis on the hazard ratio scale
+
+. . .
+
+* A worked example of an analysis of mortality data in chronic obstructive pulmonary disease (COPD)
+
+::: aside
+
+:::
+
+
+## Data
+
+* Input RCT data binary counts table
+
+![](woods-count-table.png){width=400, fig-align="centre"}
+
+* Input RCT hazard summary table
+
+![](woods-hr-table.png){width=400, fig-align="centre"}
+
+
+## Count statistics on log-hazard ratio scale
+
+* For $r_{sk}$ is the cumulative count of subject who have experienced an event in arm $k$ of study $s$; $n_{sk}$ is total number of subjects in arm $k$ of study $s$ and $F_{sk}$ is the cumulative probability of subject having an event.
+
+$$
+r_{sk} \sim Bin(F_{sk}, n_{sk})
+$$
+
+* The log cumulative hazard for each trial arm is then
+
+$$
+\ln(H_{sk}) = \ln(-\ln(1-F_{sk}))
+$$
+
+* The log cumulative hazard is estimated as the sum of a study specific ‘baseline’ term $\alpha_s$ and a treatment effect coefficient $\beta_k$:
+
+$$
+\ln(H_{s,k}) = \alpha_s + \beta_k - \beta_b
+$$
+where $\beta_1 = 0$ for the reference treatment and $\beta_b$ represents the treatment effect for the baseline treatment in study $s$.
+
+## What is $\beta_k$?
+
+* Under the assumption of proportional hazards, $\beta_k$ is _both_ log cumulative hazard ratio _and_ log hazard ratio:
+
+$$
+\ln \left( \frac{\exp(\beta_k) h_{sb}}{h_{sb}} \right) = \ln \left( \frac{\int_0^t\exp(\beta_k) h_{sb}}{\int_0^th_{sb}} \right) = \beta_k
+$$
+
+## Combining count and hazard ratio statistics in an NMA
+
+* $x_{skb}$ is log hazard ratio estimate for study $s$ comparing treatments $k$ and $b$
+
+$$
+x_{skb} \sim N \left( \ln\left( \frac{h_{sk}}{h_{sb}} \right), se^2_{skb} \right)
+$$
+then
+
+$$
+\ln\left( \frac{h_{sk}}{h_{sb}} \right) = \beta_k - \beta_b
+$$
+
+## Coding in BUGS
+
+* For hazard ratio reporting studies
+
+```{r eval=FALSE, echo=TRUE}
+
+for (ii in 1:LnObs) {
+  Lmu[ii] <- alpha[Lstudy[ii]]*multi[ii] + beta[Ltx[ii]] - beta[Lbase[ii]]
+  Lprec[ii] <- 1 / pow(Lse[ii], 2)
+  Lmean[ii] ~ dnorm(Lmu[ii], Lprec[ii])
+}
+```
+
+* For binary data reporting studies
+
+```{r eval=FALSE, echo=TRUE}
+
+for (ss in 1:BnObs) {
+  logCumHaz[ss] <- alpha[Bstudy[ss]] + beta[Btx[ss]] - beta[Bbase[ss]]
+  cumFail[ss] <- 1 - exp(-1 * exp(logCumHaz[ss]))
+  Br[ss] ~ dbin(cumFail[ss], Bn[ss])
+  }
+  
+```
+
+
+## Going further
+
+
+::: {.callout-note icon=false}
+
+## References
+
+1. __Saramago P, Chuang LH, Soares MO__. _Network meta-analysis of (individual patient) time to event data alongside (aggregate) count data_. BMC Med Res Methodol. 2014;14(1). 
+
+2. __Woods BS, Hawkins N, Scott DA__. _Network meta-analysis on the log-hazard scale, combining count and hazard ratio statistics accounting for multi-arm trials: A tutorial_. BMC Med Res Methodol. 2010;10.
+
+3. __Donegan S, Williamson P, D’Alessandro U, Garner P, Smith C__: _Combining individual patient data and aggregate data in mixed treatment comparison meta-analysis: individual patient data may be beneficial if only for a subset of trials_. Stat Med 2013, 32(6):914–930.
+
+4. __Berlin J, Santanna J, Schmid C, Szczech L, Feldman H__: _Individual patient- versus group-level data meta-regressions for the investigation of treatment effect modifiers: ecological bias rears its ugly head_. Stat Med 2002, 21(3):371–387.
+
+5. __Riley R, Lambert P, Staessen J, Wang J, Gueyffier F, Thijs L, Boutitie F__: _Meta-analysis of continuous outcomes combining individual patient data and aggregate data_. Stat Med 2008, 27(11):1870–1893
+
+:::
+
+
+<!-- template code -->
+
+<!-- :::: {.columns} -->
+
+<!-- ::: {.column width="50%"} -->
+
+<!-- ::: -->
+
+<!-- ::: {.column width="50%"} -->
+
+<!-- ::: -->
+
+<!-- :::: -->
