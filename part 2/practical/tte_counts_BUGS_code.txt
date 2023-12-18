@@ -6,7 +6,7 @@ model {
   ### Part 1: Model for IPD
   
   for(i in 1:n.subjects) {
-    # Weibull likelihood for IPD
+    # exponential likelihood for IPD
     t.obs[i] ~ dexp(zu[i])I(t.cens[i], )
     
     # Model for IPD
