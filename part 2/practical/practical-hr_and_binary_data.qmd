@@ -1,5 +1,5 @@
 ---
-title: "Practical: Network meta-analysis with time to event data alongside count data"
+title: "Practical: Network meta-analysis with hazard ratio summaries alongside count data"
 output: 
   pdf_document
 format:
@@ -15,80 +15,56 @@ links:
     icon_pack: fas
 ---
 
-<!-- ::: {.content-hidden when-format="pdf"} -->
-<!-- {{< include /practical/_info.qmd >}} -->
-<!-- ::: -->
-
 
 ## 1. Introduction
 
-A small number of data from the case study of compression systems aiming to
-deliver high compression to promote venous leg ulcer healing, from Saramago
-(2014).
-They are saved in `part 2/practical/tte_counts_input_data.RData` and created at
+Data and BUGS code from Woods (2010).
+They are saved in `part 2/practical/hr_counts_input_data.RData` and created at
 the top of the analysis `R` script.
 The data include the following variables:
 
--   `treat`: treatment arm (coded 1,2)
+-   `Lstudy`: Hazard study ID
 
--   `baseline`: reference treatment code, 
+-   `Ltx`: Hazard study treatment index
 
--   `t.obs`: time to event in months (under censoring)
+-   `Lbase`: Hazard study base treatment
 
--   `t.cens`: time of censoring in months,
+-   `Lmean`: Mean hazard ratio
 
--   `n.subjects`: Number of participants in IPD
+-   `Lse`: Hazard ratio standard error
 
--   `n.treat`: Number of treatments
+-   `multi`: Multiple arm study
 
--   `a.id` : study number
+-   `Bstudy`: Binary data study ID
 
--   `a.treat` : treatment arm code (coded from 1 to number of treatments), 
+-   `Btx`: Binary data treatment index
 
--   `r` : number of events in trial arm
+-   `Bbase`: Binary data base treatment 
 
--   `n` : number of patients in trial arm
+-   `Br`: Binary data number of events
 
--   `a.base` : reference treatment code
+-   `Bn`: Binary data total number of individuals
 
--   `a.time` : follow-up time of trial
+-   `LnObs`: Hazard data number of observations
 
--   `n.agg.trials` : Number of AD studies
+-   `BnObs`: Binary data number of observations
 
--   `n.agg.arms` : Number of AD study arms
+-   `nTx`: Total number of treatments
 
-The `R` script [`tte_counts_script.R`](part 2/practical/tte_counts_script.R) guides you through the
+-   `nStudies`: Total number of studies
+
+The `R` script [`Woods_script.R`](part 2/practical/Woods_script.R) guides you through the
 analysis.
 
 ## 2. BUGS code
 
-Look at the BUGS code in the file [`tte_counts_BUGS_code.txt`](part 2/practical/tte_counts_BUGS_code.txt).
-This is a simplified version of the original model from Saramago (2014). The original coded is available in the file [`Saramago_BUGS_code.txt`](Saramago_BUGS_code).
-Can you see what has been omitted?
-
-* _Centres and other covariates_, requiring addition parameters in the regression terms
-
-* _Additional IPD data set_. In the paper there were two IPD data sets. The model for each of these was coded separately. This could have been handled more generically but included additional indexes, so that in future this could have handled any number of IPD studies. Because this code was written specific to this analysis and there were only two data sets this was fine but further duplication is not recommended.
-
-* _Weibull survival distribution_. This required an extra hyper-parameter `shape` in comparison the exponential distribution, which also needed a prior distribution specifying.
-
+Look at the BUGS code in the file [`Woods_BUGS_code_FE.txt`](part 2/practical/Woods_BUGS_code_FE.txt).
+This is the fixed effects version of the model.
 
 ## 3. Running the model
 
 - Run the model using the `bugs()` command and inspect the output.
 
-- Has the MCMC converged? Look at the trace plots for the "hairy caterpillar". What is the effective sample size?
-
-- Write some additional BUGS and R code to return the hazard ratios.
-
-```
-  for (k in 2:n.treat) {
-    hr <- exp(d[k])
-  }
-```
-
-and don't forget to include the additional parameter in the list of monitored parameters to return i.e. `parameters = c("d", "hr")`.
-
-- What is the conclusion? The HR is about 0.7 indicating that the alternative treatment (2) rates the rate of occurrence of events.
+- What is the conclusion?
 
 

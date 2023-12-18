@@ -70,7 +70,7 @@ save(input_dat, file = "part 2/practical/tte_counts_input_data.RData")
 
 res <-
   bugs(
-    model = here::here("part 2/tte_counts_BUGS_code.txt"),
+    model = here::here("part 2/practical/tte_counts_BUGS_code.txt"),
     data = input_dat,
     inits = inits,
     parameters = "d",
