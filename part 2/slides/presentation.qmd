@@ -1,7 +1,7 @@
 ---
-title: "Network meta-analysis using survival data"
-author: "Nathan Green"
-institute: Department of Statistic Science | University College London
+# title: "Network meta-analysis using survival data"
+# author: "Nathan Green"
+# institute: Department of Statistic Science | University College London
 format:
   revealjs:
     slide-number: true
@@ -14,6 +14,19 @@ format:
     footer: "NMA with survival data | Nathan Green (UCL)"
 # format: beamer
 ---
+
+<h1> Network meta-analysis using survival data </h1>
+
+<hr>
+
+<h3> Nathan Green, Department of Statistic Science </h3>
+<h3> University College London </h3>
+
+<h3> 19-12-2023 </h3>
+<br>
+
+<h3> `r fontawesome::fa("github", "black")` &nbsp; [github.com/n8thangreen](https://github.com/n8thangreen)
+
 
 ## Summary
 
