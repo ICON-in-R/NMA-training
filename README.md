@@ -1,6 +1,6 @@
 # NMA training
 
-⚠️ You can obtain this repo locally by clicking on the green `Code` button in the top right of the screen and selecting `Download ZIP`.
+⚠️ You can obtain this repo locally by clicking on the green `<> Code` button in the top right of the screen and selecting `Download ZIP`.
 
 This is the material for the training sessions on doing Bayesian NMA in R.
 This is an introductory session followed by a more advanced session.
