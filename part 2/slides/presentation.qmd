@@ -1,7 +1,7 @@
 ---
 # title: "Network meta-analysis using survival data"
 # author: "Nathan Green"
-# institute: Department of Statistic Science | University College London
+# institute: Department of Statistical Science | University College London
 format:
   revealjs:
     slide-number: true
@@ -19,7 +19,7 @@ format:
 
 <hr>
 
-<h3> Nathan Green, Department of Statistic Science </h3>
+<h3> Nathan Green, Department of Statistical Science </h3>
 <h3> University College London </h3>
 
 <h3> 19-12-2023 </h3>
