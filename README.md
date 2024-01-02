@@ -1,4 +1,4 @@
-# NMA training
+# Network Meta-Analysis (NMA) training
 
 ⚠️ You can obtain this repo locally by clicking on the green `<> Code` button in the top right of the screen and selecting `Download ZIP`.
 
@@ -24,4 +24,4 @@ This is an introductory session followed by a more advanced session.
     
 ### Structure
 
-The repo contains all file to produce the slides, worksheets and raw R code.
+The repo contains all the files needed to produce the slides, worksheets and raw R code.
