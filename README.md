@@ -15,7 +15,7 @@ This is an introductory session followed by a more advanced session.
 * To talk about the OpenBUGS model (explaining how the model works for discrete and continuous outcome)
 * How to obtain the results and how to interpret these
 
-### Part 2
+#### Part 2
 
 * Extending the binary data model
 * Survival analysis type data and binary data
